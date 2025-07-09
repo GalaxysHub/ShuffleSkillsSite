@@ -9,10 +9,11 @@ import {
   Typography,
   Alert,
   Divider,
-  Container,
 } from '@mui/material';
-import { Google } from '@mui/icons-material';
+import { Google, DirectionsRun } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -58,20 +59,34 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+    <Box sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navbar />
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: 400,
+          }}
+        >
         <Card sx={{ width: '100%', maxWidth: 400 }}>
           <CardContent sx={{ p: 4 }}>
-            <Typography component="h1" variant="h4" align="center" gutterBottom>
-              Create Account
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+              <DirectionsRun 
+                sx={{ 
+                  mr: 2, 
+                  fontSize: 40,
+                  color: 'primary.main',
+                  filter: 'drop-shadow(2px 2px 0px rgba(0,0,0,0.2))',
+                  transform: 'rotate(-10deg)'
+                }} 
+              />
+              <Typography component="h1" variant="h4" align="center">
+                Create Account
+              </Typography>
+            </Box>
             <Typography variant="subtitle1" align="center" color="text.secondary" gutterBottom>
               Join the shuffle community
             </Typography>
@@ -164,8 +179,10 @@ const RegisterPage: React.FC = () => {
             </Box>
           </CardContent>
         </Card>
+        </Box>
       </Box>
-    </Container>
+      <Footer />
+    </Box>
   );
 };
 

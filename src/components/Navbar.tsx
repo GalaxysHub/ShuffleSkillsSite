@@ -1,0 +1,115 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Button,
+  Typography,
+  Avatar,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import {
+  Logout,
+  Login,
+  DirectionsRun,
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+const Navbar: React.FC = () => {
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    handleMenuClose();
+    navigate('/');
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  return (
+    <AppBar position="static" color="primary" sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: 2 }}>
+        <Box sx={{ width: '100%', maxWidth: 1400 }}>
+          <Toolbar sx={{ px: 0 }}>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                cursor: 'pointer',
+                '&:hover': { opacity: 0.8 }
+              }}
+              onClick={handleLogoClick}
+            >
+              <DirectionsRun 
+                sx={{ 
+                  mr: 2, 
+                  fontSize: 32,
+                  filter: 'drop-shadow(2px 2px 0px rgba(0,0,0,0.3))',
+                  transform: 'rotate(-10deg)'
+                }} 
+              />
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Shuffle Skill Tree
+              </Typography>
+            </Box>
+            
+            <Box sx={{ flexGrow: 1 }} />
+            
+            {currentUser ? (
+              <>
+                <Button
+                  color="inherit"
+                  onClick={handleMenuOpen}
+                  startIcon={
+                    <Avatar
+                      src={currentUser?.photoURL || undefined}
+                      sx={{ width: 24, height: 24 }}
+                    >
+                      {currentUser?.displayName?.[0] || currentUser?.email?.[0] || 'U'}
+                    </Avatar>
+                  }
+                >
+                  {currentUser?.displayName || currentUser?.email || 'User'}
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem onClick={handleLogout}>
+                    <Logout fontSize="small" sx={{ mr: 1 }} />
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => navigate('/login')}
+                startIcon={<Login />}
+              >
+                Login to Save Progress
+              </Button>
+            )}
+          </Toolbar>
+        </Box>
+      </Box>
+    </AppBar>
+  );
+};
+
+export default Navbar;

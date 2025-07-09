@@ -5,37 +5,26 @@ import {
   Paper,
   Alert,
   Stack,
-  AppBar,
-  Toolbar,
-  Button,
-  Container,
-  Avatar,
-  Menu,
-  MenuItem,
 } from '@mui/material';
 import {
   School,
   TrendingUp,
   Star,
-  Logout,
-  Person,
-  Login,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import ShuffleSkillTree from '../components/ShuffleSkillTree';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 const SkillTreePage: React.FC = () => {
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [progress, setProgress] = useState({
     beginner: { completed: 0, total: 5 },
     intermediate: { completed: 0, total: 3 },
     advanced: { completed: 0, total: 2 },
   });
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -66,67 +55,13 @@ const SkillTreePage: React.FC = () => {
     loadProgress();
   }, [currentUser]);
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    handleMenuClose();
-  };
-
   return (
-    <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
-      {/* App Bar */}
-      <AppBar position="static" color="primary" sx={{ width: '100%' }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Shuffle Skill Tree
-          </Typography>
-          {currentUser ? (
-            <>
-              <Button
-                color="inherit"
-                onClick={handleMenuOpen}
-                startIcon={
-                  <Avatar
-                    src={currentUser?.photoURL || undefined}
-                    sx={{ width: 24, height: 24 }}
-                  >
-                    {currentUser?.displayName?.[0] || currentUser?.email?.[0] || 'U'}
-                  </Avatar>
-                }
-              >
-                {currentUser?.displayName || currentUser?.email || 'User'}
-              </Button>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleLogout}>
-                  <Logout fontSize="small" sx={{ mr: 1 }} />
-                  Logout
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button
-              color="inherit"
-              onClick={() => navigate('/login')}
-              startIcon={<Login />}
-            >
-              Login to Save Progress
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ flexGrow: 1, minHeight: '100vh', width: '100vw', margin: 0, padding: 0 }}>
+      {/* Navbar */}
+      <Navbar />
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Box sx={{ width: '100vw', display: 'flex', justifyContent: 'center', px: 2 }}>
+        <Box sx={{ width: '100%', maxWidth: 1200, mt: 4, mb: 4 }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h4" component="h1" gutterBottom>
@@ -219,7 +154,11 @@ const SkillTreePage: React.FC = () => {
             </li>
           </Box>
         </Paper>
-      </Container>
+        </Box>
+      </Box>
+
+      {/* Footer */}
+      <Footer />
     </Box>
   );
 };

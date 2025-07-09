@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Alert,
   useTheme,
 } from "@mui/material";
 import {
@@ -617,7 +618,7 @@ const ShuffleSkillTree: React.FC = () => {
             </DialogActions>
             {!currentUser && (
               <Box sx={{ p: 2, pt: 0 }}>
-                <Alert severity="warning" size="small">
+                <Alert severity="warning">
                   <Typography variant="body2">
                     Progress won't be saved unless you're logged in. 
                     <Button size="small" onClick={() => window.location.href = '/login'}>

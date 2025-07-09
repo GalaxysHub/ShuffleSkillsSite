@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1976d2">
+  <!-- Shoe sole -->
+  <path d="M2 17c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2s-.9 2-2 2H4c-1.1 0-2-.9-2-2z"/>
+  <!-- Shoe upper -->
+  <path d="M4 15h16c0-2-1-4-3-5.5L15 8c-.5-1-1.5-2-3-2.5C10.5 5 8.5 5.5 7 7l-1 1.5C4.5 10 4 12 4 15z"/>
+  <!-- Shoe detail line -->
+  <path d="M6 12c2-1.5 4-2 8-1.5s6 2 6 4.5" stroke="white" stroke-width="0.5" fill="none"/>
+  <!-- Lace area -->
+  <ellipse cx="12" cy="10" rx="3" ry="1.5" fill="#1565c0"/>
+</svg>
