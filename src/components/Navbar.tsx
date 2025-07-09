@@ -16,11 +16,13 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import AuthModal from './AuthModal';
 
 const Navbar: React.FC = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,7 +101,7 @@ const Navbar: React.FC = () => {
             ) : (
               <Button
                 color="inherit"
-                onClick={() => navigate('/login')}
+                onClick={() => setAuthModalOpen(true)}
                 startIcon={<Login />}
               >
                 Login to Save Progress
@@ -108,6 +110,12 @@ const Navbar: React.FC = () => {
           </Toolbar>
         </Box>
       </Box>
+      
+      <AuthModal 
+        open={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)}
+        initialMode="login"
+      />
     </AppBar>
   );
 };

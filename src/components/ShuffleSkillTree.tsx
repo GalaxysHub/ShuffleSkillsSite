@@ -12,6 +12,8 @@ import {
   DialogActions,
   Alert,
   useTheme,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -19,10 +21,13 @@ import {
   PlayArrow,
   Star,
   Timeline,
+  Fullscreen,
+  FullscreenExit,
 } from "@mui/icons-material";
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import AuthModal from './AuthModal';
 
 interface ShuffleMove {
   id: string;
@@ -35,7 +40,41 @@ interface ShuffleMove {
   videoId?: string;
   completed?: boolean;
   position: { x: number; y: number };
+  styles: ("melbourne" | "shapes")[];
+  tags?: ("kick" | "spins" | "slides")[];
+  subComponents?: {
+    id: string;
+    name: string;
+    description: string;
+    completed?: boolean;
+  }[];
+  category?: string;
 }
+
+interface Category {
+  id: string;
+  name: string;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+  prerequisites: string[];
+}
+
+const categories: Category[] = [
+  {
+    id: "kick-spins-category",
+    name: "Kick Spins",
+    position: { x: 1390, y: 350 },
+    size: { width: 320, height: 220 },
+    prerequisites: ["running-man", "t-step"],
+  },
+  {
+    id: "slides-category",
+    name: "Glides",
+    position: { x: 1740, y: 350 },
+    size: { width: 180, height: 220 },
+    prerequisites: ["running-man"],
+  },
+];
 
 const shuffleMoves: ShuffleMove[] = [
   // Foundation Moves (Level 1)
@@ -44,128 +83,279 @@ const shuffleMoves: ShuffleMove[] = [
     name: "Running Man",
     difficulty: "beginner",
     prerequisites: [],
-    unlocks: ["reverse-running-man", "running-man-variations"],
+    unlocks: ["reverse-running-man", "polly-pocket", "bree-spins", "half-step-variations", "hammer-kick"],
     description:
       "The most fundamental shuffle move - alternating heel-toe steps",
-    keyPoints: ["Keep knees loose", "Slide back foot", "Maintain rhythm"],
-    position: { x: 400, y: 50 },
+    keyPoints: ["Keep weight on balls of feet", "2 steps", "Maintain rhythm"],
+    position: { x: 550, y: 50 },
     completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["slides"],
   },
   {
     id: "t-step",
     name: "T-Step",
     difficulty: "beginner",
     prerequisites: [],
-    unlocks: ["reverse-t-step"],
+    unlocks: ["reverse-t-step", "t-step-variations", "shaper-t-step", "sacco-kicks", "w-m-step"],
     description: "Side-to-side movement forming a T shape with your feet",
     keyPoints: ["Wide stance", "Sharp direction changes", "Maintain balance"],
-    position: { x: 750, y: 50 },
+    position: { x: 950, y: 50 },
     completed: false,
+    styles: ["melbourne", "shapes"],
   },
   {
     id: "charleston",
     name: "Charleston",
     difficulty: "beginner",
     prerequisites: [],
-    unlocks: ["fast-heel-toe", "spin-heel-toe"],
+    unlocks: ["cowtail"],
     description: "Classic dance move adapted for shuffle - kick and step pattern",
     keyPoints: ["High energy kicks", "Precise timing", "Smooth transitions"],
-    position: { x: 50, y: 50 },
+    position: { x: 150, y: 50 },
     completed: false,
+    styles: ["shapes"],
+    tags: ["kick"],
   },
   {
     id: "reverse-running-man",
     name: "Reverse Running Man",
     difficulty: "beginner",
     prerequisites: ["running-man"],
-    unlocks: ["running-man-variations"],
+    unlocks: ["bree-spins"],
     description:
-      "Running man performed backwards - alternating heel-toe steps in reverse",
-    keyPoints: ["Keep knees loose", "Step back first", "Maintain backward flow"],
+      "Running man performed backwards",
+    keyPoints: ["Keep weight on balls of feet", "Step back first", "Maintain backward flow"],
     position: { x: 400, y: 180 },
     completed: false,
+    styles: ["melbourne", "shapes"],
   },
   {
     id: "reverse-t-step",
     name: "Reverse T-Step",
     difficulty: "beginner",
     prerequisites: ["t-step"],
-    unlocks: ["running-man-variations", "t-step-variations"],
+    unlocks: [],
     description: "T-Step performed in reverse direction with backward flow",
     keyPoints: ["Maintain wide stance", "Reverse direction changes", "Backward balance"],
-    position: { x: 750, y: 180 },
+    position: { x: 850, y: 250 },
     completed: false,
+    styles: ["melbourne", "shapes"],
   },
   {
-    id: "running-man-variations",
-    name: "Running Man Variations",
-    difficulty: "intermediate",
-    prerequisites: ["running-man", "reverse-running-man", "reverse-t-step"],
-    unlocks: ["freestyle"],
-    description:
-      "Various styles and modifications of the running man and t-step",
-    keyPoints: ["Forward/backward steps", "Side variations", "Smooth transitions"],
-    position: { x: 575, y: 320 },
+    id: "shaper-t-step",
+    name: "Shaper T-Step",
+    difficulty: "beginner",
+    prerequisites: ["t-step"],
+    unlocks: [],
+    description: "Shapes-focused variation of T-Step with emphasis on geometric patterns",
+    keyPoints: ["Sharp geometric shapes", "Precise angles", "Clean lines"],
+    position: { x: 1000, y: 250 },
     completed: false,
+    styles: ["shapes"],
+  },
+  {
+    id: "polly-pocket",
+    name: "Polly Pocket/X-Step",
+    difficulty: "beginner",
+    prerequisites: ["running-man"],
+    unlocks: [],
+    description: "Compact, tight variation of running man with smaller steps",
+    keyPoints: ["Small, controlled movements", "Stay low", "Keep feet close together"],
+    position: { x: 250, y: 180 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+  },
+  {
+    id: "half-step-variations",
+    name: "Half Step Variations",
+    difficulty: "beginner",
+    prerequisites: ["running-man"],
+    unlocks: [],
+    description:
+      "Various styles and modifications of half step movements",
+    keyPoints: ["Forward/backward steps", "Side variations", "Smooth transitions"],
+    position: { x: 700, y: 250 },
+    completed: false,
+    styles: ["melbourne"],
+    subComponents: [
+      {
+        id: "forward-step",
+        name: "Forward Step",
+        description: "Basic forward stepping motion fundamental to shuffle dance",
+        completed: false,
+      },
+      {
+        id: "back-step",
+        name: "Back Step", 
+        description: "Basic backward stepping motion building on reverse running man",
+        completed: false,
+      }
+    ],
+  },
+  {
+    id: "cowtail",
+    name: "Cowtail",
+    difficulty: "beginner",
+    prerequisites: ["charleston"],
+    unlocks: [],
+    description: "Classic shapes move with sharp directional changes and precise footwork",
+    keyPoints: ["Sharp direction changes", "Precise foot placement", "Geometric patterns"],
+    position: { x: 100, y: 180 },
+    completed: false,
+    styles: ["shapes"],
+  },
+  {
+    id: "w-m-step",
+    name: "W/M Step",
+    difficulty: "beginner",
+    prerequisites: ["t-step"],
+    unlocks: [],
+    description: "Shapes-focused movement pattern creating W and M formations with precise footwork",
+    keyPoints: ["W/M patterns", "Clean lines", "Geometric precision", "Foot positioning"],
+    position: { x: 1150, y: 250 },
+    completed: false,
+    styles: ["shapes"],
   },
 
   // Intermediate Combinations (Level 2)
   {
-    id: "fast-heel-toe",
-    name: "Fast Heel-Toe",
-    difficulty: "intermediate",
-    prerequisites: ["charleston"],
-    unlocks: ["spin-heel-toe"],
-    description: "Accelerated version of heel-toe with rapid fire steps",
-    keyPoints: ["Double time rhythm", "Light on feet", "Controlled speed"],
-    position: { x: 50, y: 320 },
-    completed: false,
-  },
-  {
     id: "t-step-variations",
     name: "T-Step Variations",
     difficulty: "intermediate",
-    prerequisites: ["t-step", "reverse-t-step"],
-    unlocks: ["freestyle"],
+    prerequisites: ["t-step"],
+    unlocks: [],
     description: "Creative variations and combinations of t-step movements",
     keyPoints: ["Style expression", "Direction changes", "Flow combinations"],
-    position: { x: 750, y: 320 },
+    position: { x: 900, y: 380 },
     completed: false,
+    styles: ["melbourne"],
+  },
+  {
+    id: "bree-spins",
+    name: "Bree Spins",
+    difficulty: "intermediate",
+    prerequisites: ["running-man", "reverse-running-man"],
+    unlocks: ["spinning-backkick"],
+    description: "Spinning variation combining running man with circular movements",
+    keyPoints: ["Maintain running man rhythm", "Controlled spins", "Smooth transitions"],
+    position: { x: 250, y: 380 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["spins"],
+  },
+  {
+    id: "frontside-kickspin",
+    name: "180 Frontside Kickspin",
+    difficulty: "intermediate",
+    prerequisites: ["running-man", "t-step"],
+    unlocks: ["180-backside-kickspin", "360-frontside-kickspin"],
+    description: "Advanced kickspin variation with frontside rotation and precise kick timing",
+    keyPoints: ["Frontside rotation", "Kick timing", "Smooth flow", "Balance control"],
+    position: { x: 1420, y: 390 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+    category: "kick-spins-category",
+  },
+  {
+    id: "180-backside-kickspin",
+    name: "Back Kick/180 BackSide Kick",
+    difficulty: "intermediate",
+    prerequisites: ["frontside-kickspin"],
+    unlocks: [],
+    description: "Advanced 180-degree backside kickspin with precise rotation and landing control",
+    keyPoints: ["180-degree rotation", "Backside technique", "Landing control", "Momentum management"],
+    position: { x: 1580, y: 390 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+    category: "kick-spins-category",
+  },
+  {
+    id: "sacco-kicks",
+    name: "Sacco Kicks",
+    difficulty: "intermediate",
+    prerequisites: ["t-step"],
+    unlocks: [],
+    description: "Dynamic kicking variation building on t-step foundation with precise kick timing",
+    keyPoints: ["Sharp kicks", "T-step base", "Rhythm control", "Leg positioning"],
+    position: { x: 1100, y: 380 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick"],
+  },
+  {
+    id: "hammer-kick",
+    name: "Hammer Kick",
+    difficulty: "intermediate",
+    prerequisites: ["running-man"],
+    unlocks: [],
+    description: "Powerful kicking variation building on running man with explosive hammer-like kicks",
+    keyPoints: ["Explosive kicks", "Running man base", "Power control", "Timing precision"],
+    position: { x: 500, y: 380 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["kick", "spins"],
+  },
+  {
+    id: "moonwalk",
+    name: "Moonwalk",
+    difficulty: "intermediate",
+    prerequisites: [],
+    unlocks: [],
+    description: "Smooth backward sliding movement creating the illusion of walking backwards while moving forward",
+    keyPoints: ["Smooth heel-toe transitions", "Weight transfer", "Sliding motion", "Maintain balance"],
+    position: { x: 1770, y: 390 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["slides"],
+    category: "slides-category",
+  },
+  {
+    id: "circle-glide",
+    name: "Circle Glide",
+    difficulty: "intermediate",
+    prerequisites: [],
+    unlocks: [],
+    description: "Circular sliding movement combining continuous motion with smooth directional changes",
+    keyPoints: ["Circular motion", "Continuous sliding", "Smooth transitions", "Maintain momentum"],
+    position: { x: 1850, y: 390 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["slides"],
+    category: "slides-category",
   },
 
   // Advanced Moves (Level 3)
   {
-    id: "spin-heel-toe",
-    name: "Spinning Heel-Toe",
+    id: "spinning-backkick",
+    name: "Spinning Backkick",
     difficulty: "advanced",
-    prerequisites: ["charleston", "fast-heel-toe"],
-    unlocks: ["freestyle"],
-    description: "Heel-toe combined with 360-degree spins",
-    keyPoints: [
-      "Maintain rhythm while spinning",
-      "Spot turns",
-      "Balance control",
-    ],
-    position: { x: 50, y: 480 },
+    prerequisites: ["bree-spins"],
+    unlocks: [],
+    description: "Advanced spinning move combining backkick with rotational momentum from bree spins",
+    keyPoints: ["Rotational control", "Kick timing", "Momentum management", "Balance precision"],
+    position: { x: 200, y: 550 },
     completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+  },
+  {
+    id: "360-frontside-kickspin",
+    name: "360 Frontside Kickspin",
+    difficulty: "advanced",
+    prerequisites: ["frontside-kickspin"],
+    unlocks: [],
+    description: "Full rotation frontside kickspin requiring advanced balance and rotational control",
+    keyPoints: ["Full 360 rotation", "Sustained balance", "Kick precision", "Momentum control"],
+    position: { x: 1420, y: 550 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+    category: "kick-spins-category",
   },
 
-  // Master Level (Level 4)
-  {
-    id: "freestyle",
-    name: "Freestyle Flow",
-    difficulty: "advanced",
-    prerequisites: ["spin-heel-toe", "running-man-variations", "t-step-variations"],
-    unlocks: [],
-    description: "Creative combination of all moves with personal style",
-    keyPoints: [
-      "Smooth transitions",
-      "Personal expression",
-      "Musical interpretation",
-    ],
-    position: { x: 400, y: 620 },
-    completed: false,
-  },
 ];
 
 const ShuffleSkillTree: React.FC = () => {
@@ -173,7 +363,12 @@ const ShuffleSkillTree: React.FC = () => {
   const { currentUser } = useAuth();
   const [selectedMove, setSelectedMove] = useState<ShuffleMove | null>(null);
   const [completedMoves, setCompletedMoves] = useState<Set<string>>(new Set());
+  const [completedSubComponents, setCompletedSubComponents] = useState<{[key: string]: Set<string>}>({});
   const [loading, setLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [styleFilter, setStyleFilter] = useState<"all" | "melbourne" | "shapes">("all");
+  const [tagFilter, setTagFilter] = useState<"all" | "kick" | "spins" | "slides">("all");
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -182,7 +377,14 @@ const ShuffleSkillTree: React.FC = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const progress = userData.progress || {};
+          const subProgress = userData.subComponentProgress || {};
           setCompletedMoves(new Set(Object.keys(progress).filter(key => progress[key])));
+          
+          const loadedSubComponents: {[key: string]: Set<string>} = {};
+          Object.keys(subProgress).forEach(moveId => {
+            loadedSubComponents[moveId] = new Set(Object.keys(subProgress[moveId]).filter(key => subProgress[moveId][key]));
+          });
+          setCompletedSubComponents(loadedSubComponents);
         }
       }
       setLoading(false);
@@ -208,7 +410,17 @@ const ShuffleSkillTree: React.FC = () => {
     return move.prerequisites.every((prereq) => completedMoves.has(prereq));
   };
 
-  const saveProgress = async (newCompleted: Set<string>) => {
+  const isCategoryUnlocked = (category: Category) => {
+    return category.prerequisites.every((prereq) => completedMoves.has(prereq));
+  };
+
+  const canCompleteMove = (move: ShuffleMove) => {
+    if (!move.subComponents) return true;
+    const moveSubComponents = completedSubComponents[move.id] || new Set();
+    return move.subComponents.every(sub => moveSubComponents.has(sub.id));
+  };
+
+  const saveProgress = async (newCompleted: Set<string>, newSubComponents?: {[key: string]: Set<string>}) => {
     if (currentUser) {
       try {
         const progressObj: { [key: string]: boolean } = {};
@@ -216,16 +428,55 @@ const ShuffleSkillTree: React.FC = () => {
           progressObj[move.id] = newCompleted.has(move.id);
         });
         
-        await setDoc(doc(db, 'users', currentUser.uid), {
-          progress: progressObj
-        }, { merge: true });
+        const saveData: any = { progress: progressObj };
+        
+        if (newSubComponents) {
+          const subProgressObj: { [key: string]: { [key: string]: boolean } } = {};
+          Object.keys(newSubComponents).forEach(moveId => {
+            subProgressObj[moveId] = {};
+            const move = shuffleMoves.find(m => m.id === moveId);
+            if (move?.subComponents) {
+              move.subComponents.forEach(sub => {
+                subProgressObj[moveId][sub.id] = newSubComponents[moveId].has(sub.id);
+              });
+            }
+          });
+          saveData.subComponentProgress = subProgressObj;
+        }
+        
+        await setDoc(doc(db, 'users', currentUser.uid), saveData, { merge: true });
       } catch (error) {
         console.error('Failed to save progress:', error);
       }
     }
   };
 
+  const toggleSubComponent = async (moveId: string, subComponentId: string) => {
+    const newSubComponents = { ...completedSubComponents };
+    if (!newSubComponents[moveId]) {
+      newSubComponents[moveId] = new Set();
+    }
+    
+    if (newSubComponents[moveId].has(subComponentId)) {
+      newSubComponents[moveId].delete(subComponentId);
+    } else {
+      newSubComponents[moveId].add(subComponentId);
+    }
+    
+    setCompletedSubComponents(newSubComponents);
+    
+    // Only save to Firebase if user is logged in
+    if (currentUser) {
+      await saveProgress(completedMoves, newSubComponents);
+    }
+  };
+
   const toggleComplete = async (moveId: string) => {
+    const move = shuffleMoves.find(m => m.id === moveId);
+    if (move?.subComponents && !canCompleteMove(move)) {
+      return; // Cannot complete if sub-components are not all done
+    }
+    
     const newCompleted = new Set(completedMoves);
     if (newCompleted.has(moveId)) {
       newCompleted.delete(moveId);
@@ -242,17 +493,18 @@ const ShuffleSkillTree: React.FC = () => {
     
     // Only save to Firebase if user is logged in
     if (currentUser) {
-      await saveProgress(newCompleted);
+      await saveProgress(newCompleted, completedSubComponents);
     }
   };
 
   const getConnectionLines = () => {
     const lines: React.ReactElement[] = [];
 
-    shuffleMoves.forEach((move) => {
+    filteredMoves.forEach((move) => {
       move.unlocks.forEach((unlockedMoveId) => {
         const unlockedMove = shuffleMoves.find((m) => m.id === unlockedMoveId);
-        if (unlockedMove) {
+        // Only show lines if both moves are visible in the filtered moves
+        if (unlockedMove && filteredMoves.some(m => m.id === unlockedMoveId)) {
           const startX = move.position.x + 75; // Center of move card
           const startY = move.position.y + 60;
           const endX = unlockedMove.position.x + 75;
@@ -281,12 +533,108 @@ const ShuffleSkillTree: React.FC = () => {
     return lines;
   };
 
+  const getFilteredMoves = () => {
+    let filteredMoves = shuffleMoves;
+    
+    // Filter by style
+    if (styleFilter !== "all") {
+      filteredMoves = filteredMoves.filter(move => move.styles.includes(styleFilter));
+    }
+    
+    // Filter by tag
+    if (tagFilter !== "all") {
+      filteredMoves = filteredMoves.filter(move => move.tags && move.tags.includes(tagFilter));
+    }
+    
+    return filteredMoves;
+  };
+
+  const filteredMoves = getFilteredMoves();
+
   if (loading) {
     return <Box>Loading progress...</Box>;
   }
 
   return (
     <Box>
+      {/* Full Screen Toggle */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={() => setIsFullScreen(!isFullScreen)}
+          startIcon={isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+          size="small"
+        >
+          {isFullScreen ? "Exit Full Screen" : "Full Screen"}
+        </Button>
+      </Box>
+
+      {/* Filter Chips */}
+      <Box sx={{ mb: 3 }}>
+        {/* Style Filter */}
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
+          <Typography variant="h6" sx={{ mr: 1 }}>
+            Style:
+          </Typography>
+          <Chip
+            label="All"
+            variant={styleFilter === "all" ? "filled" : "outlined"}
+            onClick={() => setStyleFilter("all")}
+            color={styleFilter === "all" ? "primary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+          <Chip
+            label="Melbourne"
+            variant={styleFilter === "melbourne" ? "filled" : "outlined"}
+            onClick={() => setStyleFilter("melbourne")}
+            color={styleFilter === "melbourne" ? "primary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+          <Chip
+            label="Shapes"
+            variant={styleFilter === "shapes" ? "filled" : "outlined"}
+            onClick={() => setStyleFilter("shapes")}
+            color={styleFilter === "shapes" ? "primary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+        </Box>
+        
+        {/* Tag Filter */}
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Typography variant="h6" sx={{ mr: 1 }}>
+            Tags:
+          </Typography>
+          <Chip
+            label="All"
+            variant={tagFilter === "all" ? "filled" : "outlined"}
+            onClick={() => setTagFilter("all")}
+            color={tagFilter === "all" ? "secondary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+          <Chip
+            label="🦵 Kicks"
+            variant={tagFilter === "kick" ? "filled" : "outlined"}
+            onClick={() => setTagFilter("kick")}
+            color={tagFilter === "kick" ? "secondary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+          <Chip
+            label="🌀 Spins"
+            variant={tagFilter === "spins" ? "filled" : "outlined"}
+            onClick={() => setTagFilter("spins")}
+            color={tagFilter === "spins" ? "secondary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+          <Chip
+            label="🛝 Slides"
+            variant={tagFilter === "slides" ? "filled" : "outlined"}
+            onClick={() => setTagFilter("slides")}
+            color={tagFilter === "slides" ? "secondary" : "default"}
+            sx={{ cursor: "pointer" }}
+          />
+        </Box>
+      </Box>
+
       {/* Legend */}
       <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
         <Chip
@@ -318,17 +666,39 @@ const ShuffleSkillTree: React.FC = () => {
       {/* Skill Tree Visualization */}
       <Box
         sx={{
-          position: "relative",
-          width: "100%",
-          height: "750px",
+          position: isFullScreen ? "fixed" : "relative",
+          top: isFullScreen ? 0 : "auto",
+          left: isFullScreen ? 0 : "auto",
+          width: isFullScreen ? "100vw" : "100%",
+          height: isFullScreen ? "100vh" : "750px",
           overflow: "auto",
           border: `1px solid ${theme.palette.divider}`,
-          borderRadius: 2,
+          borderRadius: isFullScreen ? 0 : 2,
           p: 2,
+          backgroundColor: theme.palette.background.paper,
+          zIndex: isFullScreen ? 9999 : "auto",
         }}
       >
+        {/* Full Screen Exit Button (shown only in full screen) */}
+        {isFullScreen && (
+          <Button
+            variant="contained"
+            onClick={() => setIsFullScreen(false)}
+            startIcon={<FullscreenExit />}
+            size="small"
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 10,
+            }}
+          >
+            Exit Full Screen
+          </Button>
+        )}
+
         <svg
-          width="1000"
+          width="2000"
           height="750"
           style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
         >
@@ -356,7 +726,7 @@ const ShuffleSkillTree: React.FC = () => {
           
           <rect
             x="5"
-            y="320"
+            y="380"
             width="25"
             height="90"
             fill={getDifficultyColor("intermediate")}
@@ -365,19 +735,19 @@ const ShuffleSkillTree: React.FC = () => {
           />
           <text
             x="17"
-            y="365"
+            y="425"
             fill="white"
             fontSize="12"
             fontWeight="bold"
             textAnchor="middle"
-            transform="rotate(-90 17 365)"
+            transform="rotate(-90 17 425)"
           >
             Intermediate
           </text>
           
           <rect
             x="5"
-            y="480"
+            y="540"
             width="25"
             height="70"
             fill={getDifficultyColor("advanced")}
@@ -386,12 +756,12 @@ const ShuffleSkillTree: React.FC = () => {
           />
           <text
             x="17"
-            y="515"
+            y="575"
             fill="white"
             fontSize="12"
             fontWeight="bold"
             textAnchor="middle"
-            transform="rotate(-90 17 515)"
+            transform="rotate(-90 17 575)"
           >
             Advanced
           </text>
@@ -399,27 +769,27 @@ const ShuffleSkillTree: React.FC = () => {
           {/* Optional: Add horizontal guide lines */}
           <line
             x1="0"
-            y1="120"
-            x2="1000"
-            y2="120"
+            y1="170"
+            x2="2000"
+            y2="170"
             stroke={theme.palette.divider}
             strokeWidth="1"
             opacity="0.3"
           />
           <line
             x1="0"
-            y1="380"
-            x2="1000"
-            y2="380"
+            y1="330"
+            x2="2000"
+            y2="330"
             stroke={theme.palette.divider}
             strokeWidth="1"
             opacity="0.3"
           />
           <line
             x1="0"
-            y1="550"
-            x2="1000"
-            y2="550"
+            y1="490"
+            x2="2000"
+            y2="490"
             stroke={theme.palette.divider}
             strokeWidth="1"
             opacity="0.3"
@@ -428,9 +798,60 @@ const ShuffleSkillTree: React.FC = () => {
           {getConnectionLines()}
         </svg>
 
-        {shuffleMoves.map((move) => {
+        {/* Category Headers */}
+        {categories.map((category) => {
+          const categoryUnlocked = isCategoryUnlocked(category);
+          const categoryMoves = filteredMoves.filter(move => move.category === category.id);
+          
+          // Only show category if it has moves in the current filter
+          if (categoryMoves.length === 0) return null;
+
+          // Calculate center position based on moves in this category
+          const movePositions = categoryMoves.map(move => move.position.x);
+          const minX = Math.min(...movePositions);
+          const maxX = Math.max(...movePositions);
+          const centerX = (minX + maxX) / 2 + 75; // +75 for center of card width
+
+          return (
+            <Box
+              key={category.id}
+              sx={{
+                position: "absolute",
+                left: centerX - 50, // Center the header (assuming ~100px header width)
+                top: category.position.y - 15,
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Chip
+                label={`${category.name} ${!categoryUnlocked ? "🔒" : ""}`}
+                size="small"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "0.7rem",
+                  color: categoryUnlocked ? theme.palette.primary.main : theme.palette.grey[600],
+                  backgroundColor: theme.palette.background.paper,
+                  border: `2px solid ${categoryUnlocked ? theme.palette.primary.main : theme.palette.grey[400]}`,
+                  opacity: categoryUnlocked ? 1 : 0.5,
+                }}
+              />
+            </Box>
+          );
+        })}
+
+        {filteredMoves.map((move) => {
           const isCompleted = completedMoves.has(move.id);
           const isLocked = !isUnlocked(move);
+          
+          // If move is in a category, check if category is unlocked
+          if (move.category) {
+            const category = categories.find(cat => cat.id === move.category);
+            if (category && !isCategoryUnlocked(category)) {
+              return null; // Don't render move if category is locked
+            }
+          }
 
           return (
             <Card
@@ -458,47 +879,64 @@ const ShuffleSkillTree: React.FC = () => {
               }}
               onClick={() => setSelectedMove(move)}
             >
-              <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
+              <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
+                {/* Header with difficulty color border */}
                 <Box
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    mb: 1,
+                    borderTop: `4px solid ${getDifficultyColor(move.difficulty)}`,
+                    p: 1.5,
+                    pb: 1,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontSize: "0.9rem", fontWeight: "bold" }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      mb: 1,
+                    }}
                   >
-                    {move.name}
-                  </Typography>
-                  {isCompleted ? (
-                    <CheckCircle color="primary" fontSize="small" />
-                  ) : isLocked ? (
-                    <Lock color="disabled" fontSize="small" />
-                  ) : (
-                    <PlayArrow color="action" fontSize="small" />
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "0.9rem", fontWeight: "bold" }}
+                    >
+                      {move.name}
+                    </Typography>
+                    {isCompleted ? (
+                      <CheckCircle color="primary" fontSize="small" />
+                    ) : isLocked ? (
+                      <Lock color="disabled" fontSize="small" />
+                    ) : (
+                      <PlayArrow color="action" fontSize="small" />
+                    )}
+                  </Box>
+
+                  {/* Tags only */}
+                  {move.tags && move.tags.length > 0 && (
+                    <Box sx={{ display: "flex", gap: 0.5, mb: 1, flexWrap: "wrap" }}>
+                      {move.tags.map((tag) => (
+                        <Chip
+                          key={tag}
+                          size="small"
+                          label={tag === "kick" ? "🦵" : tag === "spins" ? "🌀" : tag === "slides" ? "🛝" : tag}
+                          sx={{
+                            fontSize: "0.6rem",
+                            height: "18px",
+                            backgroundColor: theme.palette.secondary.light,
+                            color: "white",
+                          }}
+                        />
+                      ))}
+                    </Box>
                   )}
+
+                  <Typography
+                    variant="caption"
+                    sx={{ display: "block", color: "text.secondary", fontSize: "0.7rem" }}
+                  >
+                    {move.description.substring(0, 35)}...
+                  </Typography>
                 </Box>
-
-                <Chip
-                  size="small"
-                  label={move.difficulty}
-                  sx={{
-                    backgroundColor: getDifficultyColor(move.difficulty),
-                    color: "white",
-                    fontSize: "0.7rem",
-                    height: "20px",
-                  }}
-                />
-
-                <Typography
-                  variant="caption"
-                  sx={{ display: "block", mt: 1, color: "text.secondary" }}
-                >
-                  {move.description.substring(0, 40)}...
-                </Typography>
               </CardContent>
             </Card>
           );
@@ -511,6 +949,9 @@ const ShuffleSkillTree: React.FC = () => {
         onClose={() => setSelectedMove(null)}
         maxWidth="md"
         fullWidth
+        sx={{
+          zIndex: isFullScreen ? 10000 : 1300,
+        }}
       >
         {selectedMove && (
           <>
@@ -570,9 +1011,64 @@ const ShuffleSkillTree: React.FC = () => {
                             completedMoves.has(prereq) ? "success" : "default"
                           }
                           size="small"
+                          onClick={() => prereqMove && setSelectedMove(prereqMove)}
+                          sx={{ cursor: "pointer" }}
                         />
                       );
                     })}
+                  </Box>
+                </>
+              )}
+
+              {selectedMove.subComponents && selectedMove.subComponents.length > 0 && (
+                <>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Components to Master:
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 2 }}>
+                    {selectedMove.subComponents.map((subComponent) => {
+                      const moveSubComponents = completedSubComponents[selectedMove.id] || new Set();
+                      return (
+                        <FormControlLabel
+                          key={subComponent.id}
+                          control={
+                            <Checkbox
+                              checked={moveSubComponents.has(subComponent.id)}
+                              onChange={() => toggleSubComponent(selectedMove.id, subComponent.id)}
+                              disabled={!isUnlocked(selectedMove)}
+                            />
+                          }
+                          label={
+                            <Box>
+                              <Typography variant="body2" fontWeight="bold">
+                                {subComponent.name}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {subComponent.description}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      );
+                    })}
+                  </Box>
+                </>
+              )}
+
+              {selectedMove.tags && selectedMove.tags.length > 0 && (
+                <>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Tags:
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+                    {selectedMove.tags.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={`${tag === "kick" ? "🦵" : tag === "spins" ? "🌀" : tag === "slides" ? "🛝" : ""} ${tag.charAt(0).toUpperCase() + tag.slice(1)}`}
+                        color="secondary"
+                        size="small"
+                      />
+                    ))}
                   </Box>
                 </>
               )}
@@ -594,6 +1090,8 @@ const ShuffleSkillTree: React.FC = () => {
                           color="primary"
                           variant="outlined"
                           size="small"
+                          onClick={() => unlockMove && setSelectedMove(unlockMove)}
+                          sx={{ cursor: "pointer" }}
                         />
                       );
                     })}
@@ -607,10 +1105,12 @@ const ShuffleSkillTree: React.FC = () => {
                 variant={
                   completedMoves.has(selectedMove.id) ? "outlined" : "contained"
                 }
-                disabled={!isUnlocked(selectedMove)}
+                disabled={!isUnlocked(selectedMove) || (selectedMove.subComponents && !canCompleteMove(selectedMove))}
               >
                 {completedMoves.has(selectedMove.id)
                   ? "Mark Incomplete"
+                  : selectedMove.subComponents && !canCompleteMove(selectedMove)
+                  ? "Complete All Components First"
                   : "Mark Complete"}
                 {!currentUser && " (Not Saved)"}
               </Button>
@@ -621,7 +1121,7 @@ const ShuffleSkillTree: React.FC = () => {
                 <Alert severity="warning">
                   <Typography variant="body2">
                     Progress won't be saved unless you're logged in. 
-                    <Button size="small" onClick={() => window.location.href = '/login'}>
+                    <Button size="small" onClick={() => setAuthModalOpen(true)}>
                       Login here
                     </Button>
                   </Typography>
@@ -631,6 +1131,12 @@ const ShuffleSkillTree: React.FC = () => {
           </>
         )}
       </Dialog>
+      
+      <AuthModal 
+        open={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)}
+        initialMode="login"
+      />
     </Box>
   );
 };

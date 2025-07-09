@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Typography,
-  Link,
   Divider,
 } from '@mui/material';
 import {
@@ -22,7 +21,7 @@ const Footer: React.FC = () => {
       }}
     >
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: 2 }}>
-        <Box sx={{ width: '100%', maxWidth: 1200, py: 4 }}>
+        <Box sx={{ width: '100%', maxWidth: 1400, py: 4 }}>
           {/* Main Footer Content */}
           <Box
             sx={{
@@ -56,23 +55,6 @@ const Footer: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Quick Links */}
-            <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-              <Typography variant="h6" gutterBottom fontWeight="bold">
-                Quick Links
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Link href="#" underline="hover" color="text.secondary">
-                  Skill Tree
-                </Link>
-                <Link href="/login" underline="hover" color="text.secondary">
-                  Login
-                </Link>
-                <Link href="/register" underline="hover" color="text.secondary">
-                  Sign Up
-                </Link>
-              </Box>
-            </Box>
 
             {/* Learning Resources */}
             <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>

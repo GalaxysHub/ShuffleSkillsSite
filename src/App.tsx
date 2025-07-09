@@ -3,8 +3,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import SkillTreePage from './pages/SkillTreePage';
 
 const theme = createTheme({
@@ -26,8 +24,6 @@ function App() {
         <Router>
           <Box sx={{ margin: 0, padding: 0 }}>
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
               <Route path="/" element={<SkillTreePage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
