@@ -22,7 +22,7 @@ const SkillTreePage: React.FC = () => {
   const { currentUser } = useAuth();
   const [progress, setProgress] = useState({
     beginner: { completed: 0, total: 10 },
-    intermediate: { completed: 0, total: 8 },
+    intermediate: { completed: 0, total: 9 },
     advanced: { completed: 0, total: 2 },
   });
 
@@ -36,7 +36,7 @@ const SkillTreePage: React.FC = () => {
           
           // Count completed moves by difficulty
           const beginnerMoves = ['running-man', 't-step', 'charleston', 'reverse-running-man', 'reverse-t-step', 'polly-pocket', 'half-step-variations', 'shaper-t-step', 'cowtail', 'w-m-step'];
-          const intermediateMoves = ['t-step-variations', 'bree-spins', 'frontside-kickspin', 'sacco-kicks', 'hammer-kick', '180-backside-kickspin', 'moonwalk', 'circle-glide'];
+          const intermediateMoves = ['t-step-variations', 'bree-spins', 'frontside-kickspin', 'sacco-kicks', 'hammer-kick', '180-backside-kickspin', 'moonwalk', 'circle-glide', 'side-glide'];
           const advancedMoves: string[] = ['spinning-backkick', '360-frontside-kickspin'];
           
           const beginnerCompleted = beginnerMoves.filter(move => userProgress[move]).length;

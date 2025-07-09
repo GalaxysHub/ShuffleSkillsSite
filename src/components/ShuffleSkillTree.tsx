@@ -70,8 +70,8 @@ const categories: Category[] = [
   {
     id: "slides-category",
     name: "Glides",
-    position: { x: 1740, y: 350 },
-    size: { width: 180, height: 220 },
+    position: { x: 1740, y: 360 },
+    size: { width: 250, height: 180 },
     prerequisites: ["running-man"],
   },
 ];
@@ -115,7 +115,6 @@ const shuffleMoves: ShuffleMove[] = [
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
-    tags: ["kick"],
   },
   {
     id: "reverse-running-man",
@@ -126,7 +125,7 @@ const shuffleMoves: ShuffleMove[] = [
     description:
       "Running man performed backwards",
     keyPoints: ["Keep weight on balls of feet", "Step back first", "Maintain backward flow"],
-    position: { x: 400, y: 180 },
+    position: { x: 450, y: 180 },
     completed: false,
     styles: ["melbourne", "shapes"],
   },
@@ -162,7 +161,7 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [],
     description: "Compact, tight variation of running man with smaller steps",
     keyPoints: ["Small, controlled movements", "Stay low", "Keep feet close together"],
-    position: { x: 250, y: 180 },
+    position: { x: 550, y: 180 },
     completed: false,
     styles: ["melbourne", "shapes"],
   },
@@ -175,7 +174,7 @@ const shuffleMoves: ShuffleMove[] = [
     description:
       "Various styles and modifications of half step movements",
     keyPoints: ["Forward/backward steps", "Side variations", "Smooth transitions"],
-    position: { x: 700, y: 250 },
+    position: { x: 650, y: 180 },
     completed: false,
     styles: ["melbourne"],
     subComponents: [
@@ -230,6 +229,26 @@ const shuffleMoves: ShuffleMove[] = [
     position: { x: 900, y: 380 },
     completed: false,
     styles: ["melbourne"],
+    subComponents: [
+      {
+        id: "back",
+        name: "Back",
+        description: "T-step variation with back movement pattern",
+        completed: false,
+      },
+      {
+        id: "over",
+        name: "Over",
+        description: "T-step variation with over movement pattern",
+        completed: false,
+      },
+      {
+        id: "front",
+        name: "Front",
+        description: "T-step variation with front movement pattern",
+        completed: false,
+      }
+    ],
   },
   {
     id: "bree-spins",
@@ -239,17 +258,31 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: ["spinning-backkick"],
     description: "Spinning variation combining running man with circular movements",
     keyPoints: ["Maintain running man rhythm", "Controlled spins", "Smooth transitions"],
-    position: { x: 250, y: 380 },
+    position: { x: 450, y: 380 },
     completed: false,
     styles: ["melbourne"],
-    tags: ["spins"],
+    tags: ["spins", "slides"],
+    subComponents: [
+      {
+        id: "clockwise",
+        name: "Clockwise",
+        description: "Bree spins performed in clockwise rotation",
+        completed: false,
+      },
+      {
+        id: "counter-clockwise",
+        name: "Counter Clockwise",
+        description: "Bree spins performed in counter clockwise rotation",
+        completed: false,
+      }
+    ],
   },
   {
     id: "frontside-kickspin",
     name: "180 Frontside Kickspin",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
-    unlocks: ["180-backside-kickspin", "360-frontside-kickspin"],
+    unlocks: ["360-frontside-kickspin"],
     description: "Advanced kickspin variation with frontside rotation and precise kick timing",
     keyPoints: ["Frontside rotation", "Kick timing", "Smooth flow", "Balance control"],
     position: { x: 1420, y: 390 },
@@ -262,7 +295,7 @@ const shuffleMoves: ShuffleMove[] = [
     id: "180-backside-kickspin",
     name: "Back Kick/180 BackSide Kick",
     difficulty: "intermediate",
-    prerequisites: ["frontside-kickspin"],
+    prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description: "Advanced 180-degree backside kickspin with precise rotation and landing control",
     keyPoints: ["180-degree rotation", "Backside technique", "Landing control", "Momentum management"],
@@ -293,7 +326,7 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [],
     description: "Powerful kicking variation building on running man with explosive hammer-like kicks",
     keyPoints: ["Explosive kicks", "Running man base", "Power control", "Timing precision"],
-    position: { x: 500, y: 380 },
+    position: { x: 550, y: 380 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["kick", "spins"],
@@ -306,7 +339,7 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [],
     description: "Smooth backward sliding movement creating the illusion of walking backwards while moving forward",
     keyPoints: ["Smooth heel-toe transitions", "Weight transfer", "Sliding motion", "Maintain balance"],
-    position: { x: 1770, y: 390 },
+    position: { x: 1760, y: 380 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
@@ -320,26 +353,68 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [],
     description: "Circular sliding movement combining continuous motion with smooth directional changes",
     keyPoints: ["Circular motion", "Continuous sliding", "Smooth transitions", "Maintain momentum"],
-    position: { x: 1850, y: 390 },
+    position: { x: 1760, y: 500 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
     category: "slides-category",
+    subComponents: [
+      {
+        id: "clockwise-glide",
+        name: "Clockwise",
+        description: "Circle glide performed in clockwise direction",
+        completed: false,
+      },
+      {
+        id: "counter-clockwise-glide",
+        name: "Counter Clockwise",
+        description: "Circle glide performed in counter clockwise direction",
+        completed: false,
+      }
+    ],
+  },
+  {
+    id: "side-glide",
+    name: "Side Glide",
+    difficulty: "intermediate",
+    prerequisites: [],
+    unlocks: [],
+    description: "Side-to-side gliding movement with smooth directional transitions",
+    keyPoints: ["Side-to-side motion", "Weight transfer", "Smooth transitions", "Directional control"],
+    position: { x: 1860, y: 440 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["slides"],
+    category: "slides-category",
+    subComponents: [
+      {
+        id: "front-glide",
+        name: "Front",
+        description: "Forward side glide movement with controlled front motion",
+        completed: false,
+      },
+      {
+        id: "back-glide",
+        name: "Back",
+        description: "Backward side glide movement with controlled back motion",
+        completed: false,
+      }
+    ],
   },
 
   // Advanced Moves (Level 3)
   {
     id: "spinning-backkick",
-    name: "Spinning Backkick",
+    name: "Spinning Back Kick",
     difficulty: "advanced",
     prerequisites: ["bree-spins"],
     unlocks: [],
-    description: "Advanced spinning move combining backkick with rotational momentum from bree spins",
+    description: "Advanced spinning move combining back kick with rotational momentum from bree spins",
     keyPoints: ["Rotational control", "Kick timing", "Momentum management", "Balance precision"],
-    position: { x: 200, y: 550 },
+    position: { x: 450, y: 600 },
     completed: false,
     styles: ["melbourne"],
-    tags: ["kick", "spins"],
+    tags: ["kick", "spins", "slides"],
   },
   {
     id: "360-frontside-kickspin",
@@ -349,7 +424,7 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [],
     description: "Full rotation frontside kickspin requiring advanced balance and rotational control",
     keyPoints: ["Full 360 rotation", "Sustained balance", "Kick precision", "Momentum control"],
-    position: { x: 1420, y: 550 },
+    position: { x: 1420, y: 600 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick", "spins"],
@@ -394,13 +469,14 @@ const ShuffleSkillTree: React.FC = () => {
   }, [currentUser]);
 
   const getDifficultyColor = (difficulty: string) => {
+    const isDark = theme.palette.mode === 'dark';
     switch (difficulty) {
       case "beginner":
-        return theme.palette.success.main;
+        return isDark ? '#4caf50' : theme.palette.success.main;
       case "intermediate":
-        return theme.palette.warning.main;
+        return isDark ? '#ff9800' : theme.palette.warning.main;
       case "advanced":
-        return theme.palette.error.main;
+        return isDark ? '#f44336' : theme.palette.error.main;
       default:
         return theme.palette.grey[500];
     }
@@ -670,7 +746,7 @@ const ShuffleSkillTree: React.FC = () => {
           top: isFullScreen ? 0 : "auto",
           left: isFullScreen ? 0 : "auto",
           width: isFullScreen ? "100vw" : "100%",
-          height: isFullScreen ? "100vh" : "750px",
+          height: isFullScreen ? "100vh" : "800px",
           overflow: "auto",
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: isFullScreen ? 0 : 2,
@@ -699,7 +775,7 @@ const ShuffleSkillTree: React.FC = () => {
 
         <svg
           width="2000"
-          height="750"
+          height="800"
           style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
         >
           {/* Y-axis labels with colored backgrounds */}
@@ -747,7 +823,7 @@ const ShuffleSkillTree: React.FC = () => {
           
           <rect
             x="5"
-            y="540"
+            y="600"
             width="25"
             height="70"
             fill={getDifficultyColor("advanced")}
@@ -756,12 +832,12 @@ const ShuffleSkillTree: React.FC = () => {
           />
           <text
             x="17"
-            y="575"
+            y="635"
             fill="white"
             fontSize="12"
             fontWeight="bold"
             textAnchor="middle"
-            transform="rotate(-90 17 575)"
+            transform="rotate(-90 17 635)"
           >
             Advanced
           </text>
@@ -787,9 +863,9 @@ const ShuffleSkillTree: React.FC = () => {
           />
           <line
             x1="0"
-            y1="490"
+            y1="540"
             x2="2000"
-            y2="490"
+            y2="540"
             stroke={theme.palette.divider}
             strokeWidth="1"
             opacity="0.3"
@@ -866,11 +942,11 @@ const ShuffleSkillTree: React.FC = () => {
                 zIndex: 2,
                 border: isCompleted
                   ? `3px solid ${theme.palette.primary.main}`
-                  : "1px solid #ddd",
+                  : `1px solid ${theme.palette.divider}`,
                 opacity: isLocked && !isCompleted ? 0.5 : 1,
                 backgroundColor: isCompleted
-                  ? theme.palette.primary.light
-                  : "white",
+                  ? theme.palette.primary.light + (theme.palette.mode === 'dark' ? '40' : '')
+                  : theme.palette.background.paper,
                 "&:hover": {
                   transform: "scale(1.05)",
                   boxShadow: theme.shadows[8],

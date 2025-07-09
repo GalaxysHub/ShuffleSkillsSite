@@ -3,18 +3,21 @@ import {
   Box,
   Typography,
   Divider,
+  useTheme,
 } from '@mui/material';
 import {
   DirectionsRun,
 } from '@mui/icons-material';
 
 const Footer: React.FC = () => {
+  const theme = useTheme();
+  
   return (
     <Box
       component="footer"
       sx={{
         width: '100%',
-        backgroundColor: 'grey.100',
+        backgroundColor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.100',
         borderTop: 1,
         borderColor: 'divider',
         mt: 8,

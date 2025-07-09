@@ -8,18 +8,23 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  IconButton,
 } from '@mui/material';
 import {
   Logout,
   Login,
   DirectionsRun,
+  LightMode,
+  DarkMode,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useThemeContext } from '../App';
 import AuthModal from './AuthModal';
 
 const Navbar: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const { darkMode, toggleDarkMode } = useThemeContext();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -70,6 +75,15 @@ const Navbar: React.FC = () => {
             </Box>
             
             <Box sx={{ flexGrow: 1 }} />
+            
+            {/* Theme Toggle */}
+            <IconButton
+              color="inherit"
+              onClick={toggleDarkMode}
+              sx={{ mr: 2 }}
+            >
+              {darkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
             
             {currentUser ? (
               <>
