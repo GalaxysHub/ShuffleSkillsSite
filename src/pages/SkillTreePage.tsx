@@ -147,11 +147,6 @@ const SkillTreePage: React.FC = () => {
                 <strong>Combine gradually:</strong> Once you master individual moves, practice smooth transitions
               </Typography>
             </li>
-            <li>
-              <Typography variant="body2">
-                <strong>Express yourself:</strong> Advanced moves focus on personal style and creativity
-              </Typography>
-            </li>
           </Box>
         </Paper>
         </Box>
