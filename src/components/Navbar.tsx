@@ -118,7 +118,7 @@ const Navbar: React.FC = () => {
                 onClick={() => setAuthModalOpen(true)}
                 startIcon={<Login />}
               >
-                Login to Save Progress
+                Login
               </Button>
             )}
           </Toolbar>

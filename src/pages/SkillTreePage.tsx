@@ -5,11 +5,13 @@ import {
   Paper,
   Alert,
   Stack,
+  Chip,
 } from '@mui/material';
 import {
   School,
   TrendingUp,
   Star,
+  Flag,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
@@ -25,6 +27,7 @@ const SkillTreePage: React.FC = () => {
     intermediate: { completed: 0, total: 9 },
     advanced: { completed: 0, total: 2 },
   });
+  const [goals, setGoals] = useState<string[]>([]);
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -33,6 +36,7 @@ const SkillTreePage: React.FC = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const userProgress = userData.progress || {};
+          const userGoals = userData.goals || {};
           
           // Count completed moves by difficulty
           const beginnerMoves = ['running-man', 't-step', 'charleston', 'reverse-running-man', 'reverse-t-step', 'polly-pocket', 'half-step-variations', 'shaper-t-step', 'cowtail', 'w-m-step'];
@@ -48,6 +52,10 @@ const SkillTreePage: React.FC = () => {
             intermediate: { completed: intermediateCompleted, total: intermediateMoves.length },
             advanced: { completed: advancedCompleted, total: advancedMoves.length },
           });
+
+          // Load goals
+          const goalsList = Object.keys(userGoals).filter(key => userGoals[key]);
+          setGoals(goalsList);
         }
       }
     };
@@ -116,6 +124,55 @@ const SkillTreePage: React.FC = () => {
             </Alert>
           )}
         </Paper>
+
+        {/* Goals Section */}
+        {currentUser && goals.length > 0 && (
+          <Paper sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              <Flag sx={{ mr: 1, verticalAlign: 'middle' }} />
+              Your Goals
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+              {goals.map((goalId) => {
+                // We need to create a mapping from move ids to names
+                const moveNames: { [key: string]: string } = {
+                  'running-man': 'Running Man',
+                  't-step': 'T-Step',
+                  'charleston': 'Charleston',
+                  'reverse-running-man': 'Reverse Running Man',
+                  'reverse-t-step': 'Reverse T-Step',
+                  'polly-pocket': 'Polly Pocket/X-Step',
+                  'half-step-variations': 'Half Step Variations',
+                  'shaper-t-step': 'Shaper T-Step',
+                  'cowtail': 'Cowtail',
+                  'w-m-step': 'W/M Step',
+                  't-step-variations': 'T-Step Variations',
+                  'bree-spins': 'Bree Spins',
+                  'frontside-kickspin': '180 Frontside Kick',
+                  'sacco-kicks': 'Sacco Kicks',
+                  'hammer-kick': 'Hammer Kick',
+                  '180-backside-kickspin': 'Back Kick/180 Backside Kick',
+                  'moonwalk': 'Moonwalk',
+                  'circle-glide': 'Circle Glide',
+                  'side-glide': 'Side Glide',
+                  'spinning-backkick': 'Spinning Back Kick',
+                  '360-frontside-kickspin': '360 Frontside Kick Spin'
+                };
+                
+                return (
+                  <Chip
+                    key={goalId}
+                    label={moveNames[goalId] || goalId}
+                    color="warning"
+                    variant="outlined"
+                    icon={<Flag />}
+                    size="small"
+                  />
+                );
+              })}
+            </Box>
+          </Paper>
+        )}
 
         {/* Skill Tree */}
         <Paper sx={{ p: 3 }}>

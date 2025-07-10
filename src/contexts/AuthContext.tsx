@@ -37,7 +37,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             displayName: user.displayName,
             photoURL: user.photoURL,
             createdAt: new Date(),
-            progress: {}
+            progress: {},
+            goals: {}
           });
         }
         setCurrentUser(user);
@@ -65,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       photoURL: null,
       createdAt: new Date(),
       progress: {},
+      goals: {},
       authProvider: 'email'
     });
   };
@@ -84,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         photoURL: user.photoURL,
         createdAt: new Date(),
         progress: {},
+        goals: {},
         authProvider: 'google'
       });
     }
