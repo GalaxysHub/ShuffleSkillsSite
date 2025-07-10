@@ -579,6 +579,12 @@ const ShuffleSkillTree: React.FC = () => {
           });
           setCompletedSubComponents(loadedSubComponents);
         }
+      } else {
+        // Load goals from localStorage for non-logged-in users
+        const localGoals = localStorage.getItem('shuffleGoals');
+        if (localGoals) {
+          setGoals(new Set(JSON.parse(localGoals)));
+        }
       }
       setLoading(false);
     };
@@ -691,9 +697,12 @@ const ShuffleSkillTree: React.FC = () => {
     }
     setGoals(newGoals);
 
-    // Only save to Firebase if user is logged in
     if (currentUser) {
+      // Save to Firebase if user is logged in
       await saveProgress(completedMoves, completedSubComponents, newGoals);
+    } else {
+      // Save to localStorage if user is not logged in
+      localStorage.setItem('shuffleGoals', JSON.stringify(Array.from(newGoals)));
     }
   };
 
@@ -895,6 +904,41 @@ const ShuffleSkillTree: React.FC = () => {
           }}
         />
       </Box>
+
+      {/* Goals Section */}
+      {goals.size > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            <Flag sx={{ mr: 1, verticalAlign: 'middle' }} />
+            Your Goals
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {Array.from(goals).map((goalId) => {
+              const move = shuffleMoves.find(m => m.id === goalId);
+              return (
+                <Chip
+                  key={goalId}
+                  label={move?.name || goalId}
+                  color="warning"
+                  variant="outlined"
+                  icon={<Flag />}
+                  size="small"
+                  onClick={() => {
+                    const goalMove = shuffleMoves.find(m => m.id === goalId);
+                    if (goalMove) setSelectedMove(goalMove);
+                  }}
+                  sx={{ cursor: 'pointer' }}
+                />
+              );
+            })}
+          </Box>
+          {!currentUser && (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+              Login to save your goals permanently
+            </Typography>
+          )}
+        </Box>
+      )}
 
       {/* Skill Tree Visualization */}
       <Box
@@ -1399,9 +1443,15 @@ const ShuffleSkillTree: React.FC = () => {
               )}
             </DialogContent>
             <DialogActions>
-              {currentUser && !completedMoves.has(selectedMove.id) && (
+              {!completedMoves.has(selectedMove.id) && (
                 <Button
-                  onClick={() => toggleGoal(selectedMove.id)}
+                  onClick={() => {
+                    if (!currentUser) {
+                      setAuthModalOpen(true);
+                    } else {
+                      toggleGoal(selectedMove.id);
+                    }
+                  }}
                   variant={goals.has(selectedMove.id) ? "contained" : "outlined"}
                   startIcon={goals.has(selectedMove.id) ? <Flag /> : <FlagOutlined />}
                   color="warning"
@@ -1410,7 +1460,13 @@ const ShuffleSkillTree: React.FC = () => {
                 </Button>
               )}
               <Button
-                onClick={() => toggleComplete(selectedMove.id)}
+                onClick={() => {
+                  if (!currentUser) {
+                    setAuthModalOpen(true);
+                  } else {
+                    toggleComplete(selectedMove.id);
+                  }
+                }}
                 variant={
                   completedMoves.has(selectedMove.id) ? "outlined" : "contained"
                 }
@@ -1424,7 +1480,6 @@ const ShuffleSkillTree: React.FC = () => {
                   : selectedMove.subComponents && !canCompleteMove(selectedMove)
                   ? "Complete All Components First"
                   : "Mark Complete"}
-                {!currentUser && " (Not Saved)"}
               </Button>
               <Button onClick={() => setSelectedMove(null)}>Close</Button>
             </DialogActions>
