@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
 import SkillTreePage from './pages/SkillTreePage';
+import HistoryPage from './pages/HistoryPage';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -29,25 +30,130 @@ function App() {
   };
 
   const theme = createTheme({
+    typography: {
+      fontFamily: '"Rajdhani", "Exo 2", "Roboto", "Helvetica", "Arial", sans-serif',
+      h1: {
+        fontFamily: '"Orbitron", "Rajdhani", sans-serif',
+        fontWeight: 700,
+      },
+      h2: {
+        fontFamily: '"Orbitron", "Rajdhani", sans-serif',
+        fontWeight: 700,
+      },
+      h3: {
+        fontFamily: '"Orbitron", "Rajdhani", sans-serif',
+        fontWeight: 600,
+      },
+      h4: {
+        fontFamily: '"Rajdhani", sans-serif',
+        fontWeight: 600,
+      },
+      h5: {
+        fontFamily: '"Rajdhani", sans-serif',
+        fontWeight: 600,
+      },
+      h6: {
+        fontFamily: '"Rajdhani", sans-serif',
+        fontWeight: 600,
+      },
+      button: {
+        fontFamily: '"Rajdhani", sans-serif',
+        fontWeight: 600,
+        textTransform: 'uppercase' as const,
+        letterSpacing: '0.5px',
+      },
+    },
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {
-        main: darkMode ? '#64b5f6' : '#1976d2',
+        main: darkMode ? '#00ffff' : '#1a237e', // Cyan for dark, deep blue for light
+        light: darkMode ? '#66ffff' : '#534bae',
+        dark: darkMode ? '#00cccc' : '#000051',
       },
       secondary: {
-        main: darkMode ? '#f48fb1' : '#dc004e',
+        main: darkMode ? '#ff0099' : '#e91e63', // Hot pink/magenta
+        light: darkMode ? '#ff66bb' : '#ff5983',
+        dark: darkMode ? '#cc0077' : '#b0003a',
+      },
+      success: {
+        main: darkMode ? '#39ff14' : '#2e7d32', // Neon green for dark
+      },
+      warning: {
+        main: darkMode ? '#ffff00' : '#f57c00', // Neon yellow for dark
+      },
+      error: {
+        main: darkMode ? '#ff073a' : '#d32f2f', // Neon red for dark
       },
       ...(darkMode && {
         background: {
-          default: '#121212',
-          paper: '#1e1e1e',
+          default: '#0a0a0a', // Deep black
+          paper: '#1a1a1a', // Dark gray
         },
         text: {
           primary: '#ffffff',
-          secondary: '#b0b0b0',
+          secondary: '#cccccc',
         },
-        divider: '#404040',
+        divider: '#333333',
       }),
+      ...(!darkMode && {
+        background: {
+          default: '#f8f9fa', // Light gray
+          paper: '#ffffff',
+        },
+        text: {
+          primary: '#1a1a1a',
+          secondary: '#666666',
+        },
+        divider: '#e0e0e0',
+      }),
+    },
+    components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
+            border: darkMode ? '1px solid #333' : '1px solid #e0e0e0',
+            backdropFilter: 'blur(10px)',
+            backgroundColor: darkMode 
+              ? 'rgba(26, 26, 26, 0.8)' 
+              : 'rgba(255, 255, 255, 0.9)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              boxShadow: darkMode 
+                ? '0 8px 32px rgba(0, 255, 255, 0.15)'
+                : '0 8px 32px rgba(26, 35, 126, 0.15)',
+              transform: 'translateY(-2px)',
+            },
+          },
+        },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            fontFamily: '"Rajdhani", sans-serif',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-1px)',
+              boxShadow: darkMode 
+                ? '0 4px 16px rgba(0, 255, 255, 0.3)'
+                : '0 4px 16px rgba(26, 35, 126, 0.3)',
+            },
+          },
+        },
+      },
     },
   });
 
@@ -57,9 +163,17 @@ function App() {
         <CssBaseline />
         <AuthProvider>
           <Router>
-            <Box sx={{ margin: 0, padding: 0 }}>
+            <Box sx={{ 
+          margin: 0, 
+          padding: 0,
+          minHeight: '100vh',
+          background: darkMode
+            ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)'
+            : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%)',
+        }}>
               <Routes>
                 <Route path="/" element={<SkillTreePage />} />
+                <Route path="/history" element={<HistoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Box>

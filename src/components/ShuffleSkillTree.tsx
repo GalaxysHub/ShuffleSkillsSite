@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Chip,
   Button,
@@ -17,8 +15,6 @@ import {
 } from "@mui/material";
 import {
   CheckCircle,
-  Lock,
-  PlayArrow,
   Star,
   Timeline,
   Fullscreen,
@@ -26,10 +22,24 @@ import {
   Flag,
   FlagOutlined,
 } from "@mui/icons-material";
+import ReactFlow, {
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  ReactFlowProvider,
+  MarkerType,
+} from "reactflow";
+import type { Node, Edge } from "reactflow";
+import "reactflow/dist/style.css";
 import { useAuth } from "../contexts/AuthContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import AuthModal from "./AuthModal";
+import ShuffleMoveNode from "./ShuffleMoveNode";
+
+// Define nodeTypes outside component to prevent React Flow warnings
+const nodeTypes = { shuffleMove: ShuffleMoveNode };
 
 interface ShuffleMove {
   id: string;
@@ -53,30 +63,7 @@ interface ShuffleMove {
   category?: string;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  position: { x: number; y: number };
-  size: { width: number; height: number };
-  prerequisites: string[];
-}
 
-const categories: Category[] = [
-  {
-    id: "kick-spins-category",
-    name: "Kick Spins",
-    position: { x: 1390, y: 350 },
-    size: { width: 320, height: 220 },
-    prerequisites: ["running-man", "t-step"],
-  },
-  {
-    id: "slides-category",
-    name: "Glides",
-    position: { x: 1740, y: 360 },
-    size: { width: 250, height: 180 },
-    prerequisites: ["running-man"],
-  },
-];
 
 const shuffleMoves: ShuffleMove[] = [
   // Foundation Moves (Level 1)
@@ -93,8 +80,13 @@ const shuffleMoves: ShuffleMove[] = [
       "hammer-kick",
     ],
     description:
-      "The most fundamental shuffle move - alternating heel-toe steps",
-    keyPoints: ["Keep weight on balls of feet", "2 steps", "Maintain rhythm"],
+      "Iconic hip-hop dance move from the late 1980s featuring in-place running motion that became a cornerstone of shuffle dance",
+    keyPoints: [
+      "Mimics running in place motion",
+      "Keep weight on balls of feet", 
+      "Maintain consistent rhythm",
+      "Fundamental building block for shuffle dance"
+    ],
     position: { x: 550, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -111,9 +103,16 @@ const shuffleMoves: ShuffleMove[] = [
       "shaper-t-step",
       "sacco-kicks",
       "w-m-step",
+      "v-step",
     ],
-    description: "Side-to-side movement forming a T shape with your feet",
-    keyPoints: ["Wide stance", "Sharp direction changes", "Maintain balance"],
+    description: "Core Melbourne shuffle move from the late 1980s featuring fast heel-toe footwork that creates the characteristic shuffle glide effect",
+    keyPoints: [
+      "Fast heel-and-toe movement with ankle twisting",
+      "Creates T-shaped pattern with foot positioning", 
+      "Lift foot, move to side, shift weight, bring feet together",
+      "Foundation for the gliding illusion across floor",
+      "Essential building block for advanced combinations"
+    ],
     position: { x: 950, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -125,8 +124,14 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: [],
     unlocks: ["cowtail"],
     description:
-      "Classic dance move adapted for shuffle - kick and step pattern",
-    keyPoints: ["High energy kicks", "Precise timing", "Smooth transitions"],
+      "Historic 1920s dance with African-American roots, adapted for shuffle with signature kick-and-step patterns and swinging arm movements",
+    keyPoints: [
+      "Originated from African Juba dance traditions",
+      "Kick forward, walk back, kick back, walk forward",
+      "High energy kicks with swinging arms",
+      "Twist feet and maintain syncopated rhythm",
+      "Foundation for modern swing dance elements"
+    ],
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
@@ -259,6 +264,23 @@ const shuffleMoves: ShuffleMove[] = [
     completed: false,
     styles: ["shapes"],
   },
+  {
+    id: "v-step",
+    name: "V-Step",
+    difficulty: "beginner",
+    prerequisites: ["t-step"],
+    unlocks: [],
+    description: "V-shaped movement pattern with outward and inward foot positioning",
+    keyPoints: [
+      "V formation with feet",
+      "Outward then inward motion",
+      "Balance and control",
+      "Smooth transitions",
+    ],
+    position: { x: 1250, y: 250 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+  },
 
   // Intermediate Combinations (Level 2)
   {
@@ -327,7 +349,7 @@ const shuffleMoves: ShuffleMove[] = [
   },
   {
     id: "frontside-kickspin",
-    name: "180 Frontside Kick",
+    name: "180 Frontside Kickspin",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
     unlocks: ["360-frontside-kickspin"],
@@ -350,7 +372,7 @@ const shuffleMoves: ShuffleMove[] = [
     name: "Back Kick/180 Backside Kick",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
-    unlocks: [],
+    unlocks: ["360-backside-kickspin"],
     description:
       "Advanced 180-degree backside kickspin with precise rotation and landing control",
     keyPoints: [
@@ -532,9 +554,30 @@ const shuffleMoves: ShuffleMove[] = [
     tags: ["kick", "spins"],
     category: "kick-spins-category",
   },
+  {
+    id: "360-backside-kickspin",
+    name: "360 Backside Kickspin",
+    difficulty: "advanced",
+    prerequisites: ["180-backside-kickspin"],
+    unlocks: [],
+    description:
+      "Full rotation backside kickspin requiring advanced balance, rotational control, and precise backside technique",
+    keyPoints: [
+      "Full 360 rotation",
+      "Backside technique mastery",
+      "Sustained balance throughout rotation",
+      "Precise landing control",
+      "Advanced momentum management",
+    ],
+    position: { x: 1580, y: 600 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+    category: "kick-spins-category",
+  },
 ];
 
-const ShuffleSkillTree: React.FC = () => {
+const ShuffleSkillTreeComponent: React.FC = () => {
   const theme = useTheme();
   const { currentUser } = useAuth();
   const [selectedMove, setSelectedMove] = useState<ShuffleMove | null>(null);
@@ -545,12 +588,9 @@ const ShuffleSkillTree: React.FC = () => {
   }>({});
   const [loading, setLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [styleFilter, setStyleFilter] = useState<
-    "all" | "melbourne" | "shapes"
-  >("all");
-  const [tagFilter, setTagFilter] = useState<
-    "all" | "kick" | "spins" | "slides"
-  >("all");
+  const [styleFilters, setStyleFilters] = useState<Set<string>>(new Set());
+  const [tagFilters, setTagFilters] = useState<Set<string>>(new Set());
+  const [levelFilters, setLevelFilters] = useState<Set<string>>(new Set());
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
@@ -610,9 +650,6 @@ const ShuffleSkillTree: React.FC = () => {
     return move.prerequisites.every((prereq) => completedMoves.has(prereq));
   };
 
-  const isCategoryUnlocked = (category: Category) => {
-    return category.prerequisites.every((prereq) => completedMoves.has(prereq));
-  };
 
   const canCompleteMove = (move: ShuffleMove) => {
     if (!move.subComponents) return true;
@@ -732,66 +769,90 @@ const ShuffleSkillTree: React.FC = () => {
     }
   };
 
-  const getConnectionLines = () => {
-    const lines: React.ReactElement[] = [];
-
-    filteredMoves.forEach((move) => {
-      move.unlocks.forEach((unlockedMoveId) => {
-        const unlockedMove = shuffleMoves.find((m) => m.id === unlockedMoveId);
-        // Only show lines if both moves are visible in the filtered moves
-        if (
-          unlockedMove &&
-          filteredMoves.some((m) => m.id === unlockedMoveId)
-        ) {
-          const startX = move.position.x + 75; // Center of move card
-          const startY = move.position.y + 60;
-          const endX = unlockedMove.position.x + 75;
-          const endY = unlockedMove.position.y + 60;
-
-          lines.push(
-            <line
-              key={`${move.id}-${unlockedMoveId}`}
-              x1={startX}
-              y1={startY}
-              x2={endX}
-              y2={endY}
-              stroke={
-                completedMoves.has(move.id)
-                  ? theme.palette.primary.main
-                  : theme.palette.grey[300]
-              }
-              strokeWidth={completedMoves.has(move.id) ? 3 : 2}
-              strokeDasharray={completedMoves.has(move.id) ? "0" : "5,5"}
-            />
-          );
-        }
-      });
-    });
-
-    return lines;
-  };
 
   const getFilteredMoves = () => {
     let filteredMoves = shuffleMoves;
 
     // Filter by style
-    if (styleFilter !== "all") {
+    if (styleFilters.size > 0) {
       filteredMoves = filteredMoves.filter((move) =>
-        move.styles.includes(styleFilter)
+        move.styles.some(style => styleFilters.has(style))
       );
     }
 
     // Filter by tag
-    if (tagFilter !== "all") {
+    if (tagFilters.size > 0) {
       filteredMoves = filteredMoves.filter(
-        (move) => move.tags && move.tags.includes(tagFilter)
+        (move) => move.tags && move.tags.some(tag => tagFilters.has(tag))
+      );
+    }
+
+    // Filter by level
+    if (levelFilters.size > 0) {
+      filteredMoves = filteredMoves.filter(
+        (move) => levelFilters.has(move.difficulty)
       );
     }
 
     return filteredMoves;
   };
 
-  const filteredMoves = getFilteredMoves();
+  
+
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  // Update nodes and edges when data changes
+  useEffect(() => {
+    const filteredMoves = getFilteredMoves();
+    
+    const newNodes: Node[] = filteredMoves.map((move) => ({
+      id: move.id,
+      type: 'shuffleMove',
+      position: { x: move.position.x, y: move.position.y },
+      data: {
+        id: move.id,
+        name: move.name,
+        difficulty: move.difficulty,
+        description: move.description,
+        tags: move.tags,
+        isCompleted: completedMoves.has(move.id),
+        isLocked: !isUnlocked(move),
+        isGoal: goals.has(move.id),
+        onClick: () => setSelectedMove(move),
+      },
+    }));
+    
+    const newEdges: Edge[] = [];
+    filteredMoves.forEach((move) => {
+      move.unlocks.forEach((unlockedMoveId) => {
+        if (filteredMoves.some((m) => m.id === unlockedMoveId)) {
+          newEdges.push({
+            id: `${move.id}-${unlockedMoveId}`,
+            source: move.id,
+            target: unlockedMoveId,
+            type: 'smoothstep',
+            style: {
+              stroke: completedMoves.has(move.id)
+                ? theme.palette.primary.main
+                : theme.palette.grey[300],
+              strokeWidth: completedMoves.has(move.id) ? 3 : 2,
+              strokeDasharray: completedMoves.has(move.id) ? '0' : '5,5',
+            },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: completedMoves.has(move.id)
+                ? theme.palette.primary.main
+                : theme.palette.grey[300],
+            },
+          });
+        }
+      });
+    });
+    
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [styleFilters, tagFilters, levelFilters, completedMoves, goals, theme]);
 
   if (loading) {
     return <Box>Loading progress...</Box>;
@@ -815,102 +876,309 @@ const ShuffleSkillTree: React.FC = () => {
       <Box sx={{ mb: 3 }}>
         {/* Style Filter */}
         <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
-          <Typography variant="h6" sx={{ mr: 1 }}>
-            Style:
+          <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
+            STYLE:
           </Typography>
           <Chip
-            label="All"
-            variant={styleFilter === "all" ? "filled" : "outlined"}
-            onClick={() => setStyleFilter("all")}
-            color={styleFilter === "all" ? "primary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="ALL"
+            variant={styleFilters.size === 0 || styleFilters.size === 2 ? "filled" : "outlined"}
+            onClick={() => {
+              if (styleFilters.size === 0 || styleFilters.size === 2) {
+                setStyleFilters(new Set());
+              } else {
+                setStyleFilters(new Set(["melbourne", "shapes"]));
+              }
+            }}
+            color={styleFilters.size === 0 || styleFilters.size === 2 ? "primary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(0, 255, 255, 0.5)'
+                  : '0 0 10px rgba(26, 35, 126, 0.3)',
+              }
+            }}
           />
           <Chip
-            label="Melbourne"
-            variant={styleFilter === "melbourne" ? "filled" : "outlined"}
-            onClick={() => setStyleFilter("melbourne")}
-            color={styleFilter === "melbourne" ? "primary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="MELBOURNE"
+            variant={styleFilters.has("melbourne") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(styleFilters);
+              if (newFilters.has("melbourne")) {
+                newFilters.delete("melbourne");
+              } else {
+                newFilters.add("melbourne");
+              }
+              setStyleFilters(newFilters);
+            }}
+            color={styleFilters.has("melbourne") ? "primary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(0, 255, 255, 0.5)'
+                  : '0 0 10px rgba(26, 35, 126, 0.3)',
+              }
+            }}
           />
           <Chip
-            label="Shapes"
-            variant={styleFilter === "shapes" ? "filled" : "outlined"}
-            onClick={() => setStyleFilter("shapes")}
-            color={styleFilter === "shapes" ? "primary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="SHAPES"
+            variant={styleFilters.has("shapes") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(styleFilters);
+              if (newFilters.has("shapes")) {
+                newFilters.delete("shapes");
+              } else {
+                newFilters.add("shapes");
+              }
+              setStyleFilters(newFilters);
+            }}
+            color={styleFilters.has("shapes") ? "primary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(0, 255, 255, 0.5)'
+                  : '0 0 10px rgba(26, 35, 126, 0.3)',
+              }
+            }}
           />
         </Box>
 
-        {/* Tag Filter */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <Typography variant="h6" sx={{ mr: 1 }}>
-            Tags:
+        {/* Move Filter */}
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
+          <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
+            MOVES:
           </Typography>
           <Chip
-            label="All"
-            variant={tagFilter === "all" ? "filled" : "outlined"}
-            onClick={() => setTagFilter("all")}
-            color={tagFilter === "all" ? "secondary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="ALL"
+            variant={tagFilters.size === 0 || tagFilters.size === 3 ? "filled" : "outlined"}
+            onClick={() => {
+              if (tagFilters.size === 0 || tagFilters.size === 3) {
+                setTagFilters(new Set());
+              } else {
+                setTagFilters(new Set(["kick", "spins", "slides"]));
+              }
+            }}
+            color={tagFilters.size === 0 || tagFilters.size === 3 ? "secondary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(255, 0, 153, 0.5)'
+                  : '0 0 10px rgba(233, 30, 99, 0.3)',
+              }
+            }}
           />
           <Chip
-            label="🦵 Kicks"
-            variant={tagFilter === "kick" ? "filled" : "outlined"}
-            onClick={() => setTagFilter("kick")}
-            color={tagFilter === "kick" ? "secondary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="⚡ KICKS"
+            variant={tagFilters.has("kick") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(tagFilters);
+              if (newFilters.has("kick")) {
+                newFilters.delete("kick");
+              } else {
+                newFilters.add("kick");
+              }
+              setTagFilters(newFilters);
+            }}
+            color={tagFilters.has("kick") ? "secondary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(255, 0, 153, 0.5)'
+                  : '0 0 10px rgba(233, 30, 99, 0.3)',
+              }
+            }}
           />
           <Chip
-            label="🌀 Spins"
-            variant={tagFilter === "spins" ? "filled" : "outlined"}
-            onClick={() => setTagFilter("spins")}
-            color={tagFilter === "spins" ? "secondary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="🌀 SPINS"
+            variant={tagFilters.has("spins") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(tagFilters);
+              if (newFilters.has("spins")) {
+                newFilters.delete("spins");
+              } else {
+                newFilters.add("spins");
+              }
+              setTagFilters(newFilters);
+            }}
+            color={tagFilters.has("spins") ? "secondary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(255, 0, 153, 0.5)'
+                  : '0 0 10px rgba(233, 30, 99, 0.3)',
+              }
+            }}
           />
           <Chip
-            label="🛝 Slides"
-            variant={tagFilter === "slides" ? "filled" : "outlined"}
-            onClick={() => setTagFilter("slides")}
-            color={tagFilter === "slides" ? "secondary" : "default"}
-            sx={{ cursor: "pointer" }}
+            label="⚡ SLIDES"
+            variant={tagFilters.has("slides") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(tagFilters);
+              if (newFilters.has("slides")) {
+                newFilters.delete("slides");
+              } else {
+                newFilters.add("slides");
+              }
+              setTagFilters(newFilters);
+            }}
+            color={tagFilters.has("slides") ? "secondary" : "default"}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(255, 0, 153, 0.5)'
+                  : '0 0 10px rgba(233, 30, 99, 0.3)',
+              }
+            }}
+          />
+        </Box>
+
+        {/* Level Filter */}
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 3 }}>
+          <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
+            LEVEL:
+          </Typography>
+          <Chip
+            label="ALL"
+            variant={levelFilters.size === 0 || levelFilters.size === 3 ? "filled" : "outlined"}
+            onClick={() => {
+              if (levelFilters.size === 0 || levelFilters.size === 3) {
+                setLevelFilters(new Set());
+              } else {
+                setLevelFilters(new Set(["beginner", "intermediate", "advanced"]));
+              }
+            }}
+            sx={{ 
+              cursor: "pointer",
+              fontWeight: 'bold',
+              backgroundColor: levelFilters.size === 0 || levelFilters.size === 3 ? theme.palette.text.primary : 'transparent',
+              color: levelFilters.size === 0 || levelFilters.size === 3 ? theme.palette.background.paper : theme.palette.text.primary,
+              border: `1px solid ${theme.palette.text.primary}`,
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 10px rgba(255, 255, 255, 0.5)'
+                  : '0 0 10px rgba(0, 0, 0, 0.3)',
+              }
+            }}
+          />
+          <Chip
+            icon={<Star />}
+            label="BEGINNER"
+            variant={levelFilters.has("beginner") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(levelFilters);
+              if (newFilters.has("beginner")) {
+                newFilters.delete("beginner");
+              } else {
+                newFilters.add("beginner");
+              }
+              setLevelFilters(newFilters);
+            }}
+            sx={{
+              cursor: "pointer",
+              fontWeight: 'bold',
+              backgroundColor: levelFilters.has("beginner") ? getDifficultyColor("beginner") : 'transparent',
+              color: levelFilters.has("beginner") ? "white" : getDifficultyColor("beginner"),
+              border: `1px solid ${getDifficultyColor("beginner")}`,
+              textShadow: levelFilters.has("beginner") ? '0 0 5px rgba(0,0,0,0.5)' : 'none',
+              boxShadow: levelFilters.has("beginner") 
+                ? (theme.palette.mode === 'dark' 
+                    ? '0 0 15px rgba(57, 255, 20, 0.3)'
+                    : '0 4px 8px rgba(46, 125, 50, 0.3)')
+                : 'none',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 15px rgba(57, 255, 20, 0.5)'
+                  : '0 0 10px rgba(46, 125, 50, 0.3)',
+              }
+            }}
+          />
+          <Chip
+            icon={<Timeline />}
+            label="INTERMEDIATE"
+            variant={levelFilters.has("intermediate") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(levelFilters);
+              if (newFilters.has("intermediate")) {
+                newFilters.delete("intermediate");
+              } else {
+                newFilters.add("intermediate");
+              }
+              setLevelFilters(newFilters);
+            }}
+            sx={{
+              cursor: "pointer",
+              fontWeight: 'bold',
+              backgroundColor: levelFilters.has("intermediate") ? getDifficultyColor("intermediate") : 'transparent',
+              color: levelFilters.has("intermediate") ? "white" : getDifficultyColor("intermediate"),
+              border: `1px solid ${getDifficultyColor("intermediate")}`,
+              textShadow: levelFilters.has("intermediate") ? '0 0 5px rgba(0,0,0,0.5)' : 'none',
+              boxShadow: levelFilters.has("intermediate") 
+                ? (theme.palette.mode === 'dark' 
+                    ? '0 0 15px rgba(255, 255, 0, 0.3)'
+                    : '0 4px 8px rgba(245, 124, 0, 0.3)')
+                : 'none',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 15px rgba(255, 255, 0, 0.5)'
+                  : '0 0 10px rgba(245, 124, 0, 0.3)',
+              }
+            }}
+          />
+          <Chip
+            icon={<CheckCircle />}
+            label="ADVANCED"
+            variant={levelFilters.has("advanced") ? "filled" : "outlined"}
+            onClick={() => {
+              const newFilters = new Set(levelFilters);
+              if (newFilters.has("advanced")) {
+                newFilters.delete("advanced");
+              } else {
+                newFilters.add("advanced");
+              }
+              setLevelFilters(newFilters);
+            }}
+            sx={{
+              cursor: "pointer",
+              fontWeight: 'bold',
+              backgroundColor: levelFilters.has("advanced") ? getDifficultyColor("advanced") : 'transparent',
+              color: levelFilters.has("advanced") ? "white" : getDifficultyColor("advanced"),
+              border: `1px solid ${getDifficultyColor("advanced")}`,
+              textShadow: levelFilters.has("advanced") ? '0 0 5px rgba(0,0,0,0.5)' : 'none',
+              boxShadow: levelFilters.has("advanced") 
+                ? (theme.palette.mode === 'dark' 
+                    ? '0 0 15px rgba(255, 7, 58, 0.3)'
+                    : '0 4px 8px rgba(211, 47, 47, 0.3)')
+                : 'none',
+              '&:hover': {
+                boxShadow: theme.palette.mode === 'dark' 
+                  ? '0 0 15px rgba(255, 7, 58, 0.5)'
+                  : '0 0 10px rgba(211, 47, 47, 0.3)',
+              }
+            }}
           />
         </Box>
       </Box>
 
-      {/* Legend */}
-      <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
-        <Chip
-          icon={<Star />}
-          label="Beginner"
-          sx={{
-            backgroundColor: getDifficultyColor("beginner"),
-            color: "white",
-          }}
-        />
-        <Chip
-          icon={<Timeline />}
-          label="Intermediate"
-          sx={{
-            backgroundColor: getDifficultyColor("intermediate"),
-            color: "white",
-          }}
-        />
-        <Chip
-          icon={<CheckCircle />}
-          label="Advanced"
-          sx={{
-            backgroundColor: getDifficultyColor("advanced"),
-            color: "white",
-          }}
-        />
-      </Box>
 
       {/* Goals Section */}
       {goals.size > 0 && (
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ fontFamily: '"Orbitron", sans-serif' }}>
             <Flag sx={{ mr: 1, verticalAlign: 'middle' }} />
-            Your Goals
+            YOUR GOALS
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {Array.from(goals).map((goalId) => {
@@ -948,10 +1216,8 @@ const ShuffleSkillTree: React.FC = () => {
           left: isFullScreen ? 0 : "auto",
           width: isFullScreen ? "100vw" : "100%",
           height: isFullScreen ? "100vh" : "800px",
-          overflow: "auto",
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: isFullScreen ? 0 : 2,
-          p: 2,
           backgroundColor: theme.palette.background.paper,
           zIndex: isFullScreen ? 9999 : "auto",
         }}
@@ -974,285 +1240,22 @@ const ShuffleSkillTree: React.FC = () => {
           </Button>
         )}
 
-        <svg
-          width="2000"
-          height="800"
-          style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          nodeTypes={nodeTypes}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          minZoom={0.1}
+          maxZoom={2}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+          proOptions={{ hideAttribution: true }}
         >
-          {/* Y-axis labels with colored backgrounds */}
-          <rect
-            x="5"
-            y="50"
-            width="25"
-            height="70"
-            fill={getDifficultyColor("beginner")}
-            opacity="0.8"
-            rx="4"
-          />
-          <text
-            x="17"
-            y="85"
-            fill="white"
-            fontSize="12"
-            fontWeight="bold"
-            textAnchor="middle"
-            transform="rotate(-90 17 85)"
-          >
-            Beginner
-          </text>
-
-          <rect
-            x="5"
-            y="380"
-            width="25"
-            height="90"
-            fill={getDifficultyColor("intermediate")}
-            opacity="0.8"
-            rx="4"
-          />
-          <text
-            x="17"
-            y="425"
-            fill="white"
-            fontSize="12"
-            fontWeight="bold"
-            textAnchor="middle"
-            transform="rotate(-90 17 425)"
-          >
-            Intermediate
-          </text>
-
-          <rect
-            x="5"
-            y="600"
-            width="25"
-            height="70"
-            fill={getDifficultyColor("advanced")}
-            opacity="0.8"
-            rx="4"
-          />
-          <text
-            x="17"
-            y="635"
-            fill="white"
-            fontSize="12"
-            fontWeight="bold"
-            textAnchor="middle"
-            transform="rotate(-90 17 635)"
-          >
-            Advanced
-          </text>
-
-          {/* Optional: Add horizontal guide lines */}
-          <line
-            x1="0"
-            y1="170"
-            x2="2000"
-            y2="170"
-            stroke={theme.palette.divider}
-            strokeWidth="1"
-            opacity="0.3"
-          />
-          <line
-            x1="0"
-            y1="330"
-            x2="2000"
-            y2="330"
-            stroke={theme.palette.divider}
-            strokeWidth="1"
-            opacity="0.3"
-          />
-          <line
-            x1="0"
-            y1="540"
-            x2="2000"
-            y2="540"
-            stroke={theme.palette.divider}
-            strokeWidth="1"
-            opacity="0.3"
-          />
-
-          {getConnectionLines()}
-        </svg>
-
-        {/* Category Headers */}
-        {categories.map((category) => {
-          const categoryUnlocked = isCategoryUnlocked(category);
-          const categoryMoves = filteredMoves.filter(
-            (move) => move.category === category.id
-          );
-
-          // Only show category if it has moves in the current filter
-          if (categoryMoves.length === 0) return null;
-
-          // Calculate center position based on moves in this category
-          const movePositions = categoryMoves.map((move) => move.position.x);
-          const minX = Math.min(...movePositions);
-          const maxX = Math.max(...movePositions);
-          const centerX = (minX + maxX) / 2 + 75; // +75 for center of card width
-
-          return (
-            <Box
-              key={category.id}
-              sx={{
-                position: "absolute",
-                left: centerX - 50, // Center the header (assuming ~100px header width)
-                top: category.position.y - 15,
-                zIndex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Chip
-                label={`${category.name} ${!categoryUnlocked ? "🔒" : ""}`}
-                size="small"
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "0.7rem",
-                  color: categoryUnlocked
-                    ? theme.palette.primary.main
-                    : theme.palette.grey[600],
-                  backgroundColor: theme.palette.background.paper,
-                  border: `2px solid ${
-                    categoryUnlocked
-                      ? theme.palette.primary.main
-                      : theme.palette.grey[400]
-                  }`,
-                  opacity: categoryUnlocked ? 1 : 0.5,
-                }}
-              />
-            </Box>
-          );
-        })}
-
-        {filteredMoves.map((move) => {
-          const isCompleted = completedMoves.has(move.id);
-          const isLocked = !isUnlocked(move);
-
-          // If move is in a category, check if category is unlocked
-          if (move.category) {
-            const category = categories.find((cat) => cat.id === move.category);
-            if (category && !isCategoryUnlocked(category)) {
-              return null; // Don't render move if category is locked
-            }
-          }
-
-          return (
-            <Card
-              key={move.id}
-              sx={{
-                position: "absolute",
-                left: move.position.x,
-                top: move.position.y,
-                width: 150,
-                height: 120,
-                cursor: "pointer",
-                zIndex: 2,
-                border: isCompleted
-                  ? `3px solid ${theme.palette.primary.main}`
-                  : `1px solid ${theme.palette.divider}`,
-                opacity: isLocked && !isCompleted ? 0.5 : 1,
-                backgroundColor: isCompleted
-                  ? theme.palette.primary.light +
-                    (theme.palette.mode === "dark" ? "40" : "")
-                  : theme.palette.background.paper,
-                "&:hover": {
-                  transform: "scale(1.05)",
-                  boxShadow: theme.shadows[8],
-                },
-                transition: "all 0.2s ease",
-              }}
-              onClick={() => setSelectedMove(move)}
-            >
-              <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
-                {/* Header with difficulty color border */}
-                <Box
-                  sx={{
-                    borderTop: `4px solid ${getDifficultyColor(
-                      move.difficulty
-                    )}`,
-                    p: 1.5,
-                    pb: 1,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      mb: 1,
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ fontSize: "0.9rem", fontWeight: "bold" }}
-                    >
-                      {move.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 0.5, alignItems: "center" }}>
-                      {goals.has(move.id) && (
-                        <Flag color="warning" fontSize="small" />
-                      )}
-                      {isCompleted ? (
-                        <CheckCircle color="primary" fontSize="small" />
-                      ) : isLocked ? (
-                        <Lock color="disabled" fontSize="small" />
-                      ) : (
-                        <PlayArrow color="action" fontSize="small" />
-                      )}
-                    </Box>
-                  </Box>
-
-                  {/* Tags only */}
-                  {move.tags && move.tags.length > 0 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 0.5,
-                        mb: 1,
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      {move.tags.map((tag) => (
-                        <Chip
-                          key={tag}
-                          size="small"
-                          label={
-                            tag === "kick"
-                              ? "🦵"
-                              : tag === "spins"
-                              ? "🌀"
-                              : tag === "slides"
-                              ? "🛝"
-                              : tag
-                          }
-                          sx={{
-                            fontSize: "0.6rem",
-                            height: "18px",
-                            backgroundColor: theme.palette.secondary.light,
-                            color: "white",
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  )}
-
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "block",
-                      color: "text.secondary",
-                      fontSize: "0.7rem",
-                    }}
-                  >
-                    {move.description.substring(0, 35)}...
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          );
-        })}
+          <Background />
+          <Controls />
+        </ReactFlow>
       </Box>
 
       {/* Move Details Dialog */}
@@ -1288,19 +1291,51 @@ const ShuffleSkillTree: React.FC = () => {
               </Box>
             </DialogTitle>
             <DialogContent>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                {selectedMove.description}
-              </Typography>
-
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                Key Learning Points:
-              </Typography>
-              <Box component="ul" sx={{ mb: 2 }}>
-                {selectedMove.keyPoints.map((point, index) => (
-                  <li key={index}>
-                    <Typography variant="body2">{point}</Typography>
-                  </li>
-                ))}
+              {/* Move description/info and GIF container */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                {/* Left side - Description and Key Points */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body1" sx={{ mb: 2 }}>
+                    {selectedMove.description}
+                  </Typography>
+                  
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Key Learning Points:
+                  </Typography>
+                  <Box component="ul" sx={{ mb: 0, pl: 2 }}>
+                    {selectedMove.keyPoints.map((point, index) => (
+                      <li key={index}>
+                        <Typography variant="body2">{point}</Typography>
+                      </li>
+                    ))}
+                  </Box>
+                </Box>
+                
+                {/* Right side - GIF placeholder */}
+                <Box
+                  sx={{
+                    width: 320,
+                    height: 240,
+                    borderRadius: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: `1px solid ${theme.palette.divider}`,
+                    flexShrink: 0,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img 
+                    src="https://media.tenor.com/BMya17p9R6kAAAAM/merry.gif"
+                    alt="Shuffle dance demo"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '8px'
+                    }}
+                  />
+                </Box>
               </Box>
 
               {selectedMove.prerequisites.length > 0 && (
@@ -1445,13 +1480,7 @@ const ShuffleSkillTree: React.FC = () => {
             <DialogActions>
               {!completedMoves.has(selectedMove.id) && (
                 <Button
-                  onClick={() => {
-                    if (!currentUser) {
-                      setAuthModalOpen(true);
-                    } else {
-                      toggleGoal(selectedMove.id);
-                    }
-                  }}
+                  onClick={() => toggleGoal(selectedMove.id)}
                   variant={goals.has(selectedMove.id) ? "contained" : "outlined"}
                   startIcon={goals.has(selectedMove.id) ? <Flag /> : <FlagOutlined />}
                   color="warning"
@@ -1460,13 +1489,7 @@ const ShuffleSkillTree: React.FC = () => {
                 </Button>
               )}
               <Button
-                onClick={() => {
-                  if (!currentUser) {
-                    setAuthModalOpen(true);
-                  } else {
-                    toggleComplete(selectedMove.id);
-                  }
-                }}
+                onClick={() => toggleComplete(selectedMove.id)}
                 variant={
                   completedMoves.has(selectedMove.id) ? "outlined" : "contained"
                 }
@@ -1485,9 +1508,9 @@ const ShuffleSkillTree: React.FC = () => {
             </DialogActions>
             {!currentUser && (
               <Box sx={{ p: 2, pt: 0 }}>
-                <Alert severity="warning">
+                <Alert severity="info">
                   <Typography variant="body2">
-                    Progress won't be saved unless you're logged in.
+                    Progress is saved locally. Login to sync across devices.
                     <Button size="small" onClick={() => setAuthModalOpen(true)}>
                       Login here
                     </Button>
@@ -1505,6 +1528,14 @@ const ShuffleSkillTree: React.FC = () => {
         initialMode="login"
       />
     </Box>
+  );
+};
+
+const ShuffleSkillTree: React.FC = () => {
+  return (
+    <ReactFlowProvider>
+      <ShuffleSkillTreeComponent />
+    </ReactFlowProvider>
   );
 };
 
