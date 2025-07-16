@@ -4,10 +4,12 @@ import {
   Typography,
   Divider,
   useTheme,
+  Link,
 } from '@mui/material';
 import {
   DirectionsRun,
 } from '@mui/icons-material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const theme = useTheme();
@@ -77,6 +79,20 @@ const Footer: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                   • Express your style
                 </Typography>
+                <Link
+                  component={RouterLink}
+                  to="/history"
+                  variant="body2"
+                  color="primary"
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { 
+                      textDecoration: 'underline' 
+                    }
+                  }}
+                >
+                  • History
+                </Link>
               </Box>
             </Box>
 
