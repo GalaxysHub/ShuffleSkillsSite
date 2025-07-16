@@ -141,13 +141,13 @@ const shuffleMoves: ShuffleMove[] = [
     difficulty: "beginner",
     prerequisites: ["running-man"],
     unlocks: ["bree-spins"],
-    description: "Backward variation of running man with opposite footwork pattern, lifting knee backward while sliding front foot forward to create backward running illusion",
+    description: "Backward variation where you slide the back leg forward instead of backward, creating the illusion of running backward in place",
     keyPoints: [
-      "Focus on smooth weight transfers between feet",
-      "Keep sliding motion controlled and fluid",
-      "Maintain upper body stability while legs move",
-      "Master basic running man timing first",
-      "Practice with electronic music beats"
+      "Slide back leg forward instead of backward",
+      "Lift right foot behind you, shift weight to left",
+      "Keep movements quick and precise for fluidity",
+      "Maintain parallel feet throughout for clean look",
+      "Keep forearms close to torso for compact movement"
     ],
     position: { x: 450, y: 180 },
     completed: false,
@@ -159,13 +159,13 @@ const shuffleMoves: ShuffleMove[] = [
     difficulty: "beginner",
     prerequisites: ["t-step"],
     unlocks: [],
-    description: "Backward variation of T-step where heel-toe action is performed in reverse direction, creating T-shape with feet while moving backward",
+    description: "Backward variation of T-Step with heel-toe movements in reverse direction, maintaining T-shape while traveling backward",
     keyPoints: [
-      "Master forward T-step before attempting reverse",
-      "Focus on ankle flexibility and control",
-      "Keep T-shape formation consistent",
-      "Practice smooth transitions between directions",
-      "Maintain balance during directional changes"
+      "Execute heel-toe movement in backward direction",
+      "Spin on heel of planted foot, turning toes in",
+      "Spring rather than step when applying foot to floor",
+      "Position center of gravity slightly backward",
+      "Focus on controlled heel-toe action moving away from center"
     ],
     position: { x: 850, y: 250 },
     completed: false,
@@ -249,13 +249,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["charleston"],
     unlocks: [],
     description:
-      "Shapes-focused move involving flowing patterns with constant direction changes, emphasizing diagonal lines and pivoting feet",
+      "Swiping movement where one leg sweeps behind the other, alternating sides to create a tail-like swishing motion, often combined with heel-toe travel",
     keyPoints: [
-      "Master diagonal movement patterns",
-      "Focus on smooth pivoting motions",
-      "Practice direction changes without losing rhythm",
-      "Emphasize flowing, continuous movement",
-      "Coordinate upper body with directional changes"
+      "Swipe one leg behind the other in sweeping motion",
+      "Alternate the swiping action between legs",
+      "Create smooth, flowing tail-like movement",
+      "Combine with heel-toe travel for sliding effect",
+      "Focus on rhythmic leg crossing patterns"
     ],
     position: { x: 100, y: 180 },
     completed: false,
@@ -267,13 +267,13 @@ const shuffleMoves: ShuffleMove[] = [
     difficulty: "beginner",
     prerequisites: ["t-step"],
     unlocks: [],
-    description: "Steps creating W or M-shaped patterns on the floor through specific foot placement and movement sequences",
+    description: "Advanced geometric footwork creating W or M letter patterns on the floor through precise foot placement and movement sequences",
     keyPoints: [
-      "Visualize the letter patterns on the floor",
-      "Practice precise foot placement",
-      "Focus on creating clear geometric shapes",
-      "Master the sequence before adding speed",
-      "Coordinate with music timing"
+      "Create distinct W or M letter shapes with foot placement",
+      "Focus on precise geometric foot positioning",
+      "Practice pattern visualization on the floor",
+      "Master sequence timing before increasing speed",
+      "Emphasize clean lines and sharp angles"
     ],
     position: { x: 1150, y: 250 },
     completed: false,
@@ -285,13 +285,13 @@ const shuffleMoves: ShuffleMove[] = [
     difficulty: "beginner",
     prerequisites: ["t-step"],
     unlocks: [],
-    description: "Feet form V-shape, alternating between standard V and inverted V positions using heel-toe and toe-heel combinations",
+    description: "Step right foot out to side, bring left foot to meet it, forming V-shaped pattern with foot positioning and movement",
     keyPoints: [
-      "Start with feet in V formation",
-      "Master heel-toe to toe-heel transition",
-      "Practice while seated first for muscle memory",
-      "Focus on smooth spinning motions",
-      "Add directional travel once comfortable"
+      "Step right foot out to side forming first leg of V",
+      "Bring left foot to meet right foot for second leg",
+      "Return to starting position completing V shape",
+      "Focus on clear V-shape formation throughout",
+      "Practice both regular and inverted V-step variations"
     ],
     position: { x: 1250, y: 250 },
     completed: false,
@@ -387,13 +387,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: ["360-frontside-kickspin"],
     description:
-      "Half-rotation kick where dancer performs 180-degree spin while executing a kick, rotating toward the front foot",
+      "Dynamic move combining 180-degree rotation with kicking motion, rotating toward the front foot direction",
     keyPoints: [
-      "Master basic kicks before adding rotation",
-      "Practice 180-degree turns separately",
-      "Focus on landing balance after rotation",
-      "Coordinate kick timing with spin completion",
-      "Build up speed gradually"
+      "Initiate kick with front leg while beginning rotation",
+      "Use planted foot as pivot point for 180-degree turn",
+      "Complete rotation as kick reaches full extension",
+      "Generate rotation through upper body torque",
+      "Coordinate kick timing with spin completion"
     ],
     position: { x: 1420, y: 390 },
     completed: false,
@@ -408,12 +408,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: ["360-backside-kickspin"],
     description:
-      "Advanced 180-degree backside kickspin with precise rotation and landing control",
+      "Advanced 180-degree backside rotation combined with kick, rotating toward the back foot with precise landing control",
     keyPoints: [
-      "180-degree rotation",
-      "Backside technique",
-      "Landing control",
-      "Momentum management",
+      "Start with weight on front foot for proper setup",
+      "Initiate kick with back leg while beginning backside rotation",
+      "Turn back toward direction of spin (opposite of frontside)",
+      "Requires greater balance control than frontside version",
+      "Focus on controlled landing and stability after completion"
     ],
     position: { x: 1580, y: 390 },
     completed: false,
@@ -485,13 +486,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: [],
     unlocks: [],
     description:
-      "Gliding move where dancer slides backward while appearing to walk forward, creating illusion of defying physics",
+      "Classic gliding technique creating illusion of walking forward while sliding backward using proper weight distribution",
     keyPoints: [
-      "Master weight shifting between feet",
-      "Practice on smooth, slippery surfaces",
-      "Focus on controlled, smooth sliding",
-      "Coordinate arm movements naturally",
-      "Maintain forward-walking illusion"
+      "Slide one foot backward while keeping other foot flat",
+      "Create smooth transitions through ball-of-foot positioning",
+      "Alternate sliding motion between left and right feet",
+      "Practice on smooth surfaces for optimal gliding",
+      "Coordinate natural arm movements to enhance illusion"
     ],
     position: { x: 1760, y: 380 },
     completed: false,
@@ -506,13 +507,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: [],
     unlocks: [],
     description:
-      "Gliding movement that travels in circular pattern, combining sliding technique with rotational movement",
+      "Advanced gliding technique traveling in circular patterns, combining sliding with rotational movement for complex floor patterns",
     keyPoints: [
-      "Master basic gliding first",
-      "Practice circular patterns slowly",
-      "Focus on smooth, continuous motion",
-      "Maintain balance during circular movement",
-      "Coordinate with upper body for flow"
+      "Initiate circular motion through gradual directional changes",
+      "Maintain continuous sliding motion throughout circular path",
+      "Use subtle weight shifts to control circular diameter",
+      "Practice both clockwise and counter-clockwise directions",
+      "Coordinate circular movement with upper body flow"
     ],
     position: { x: 1760, y: 500 },
     completed: false,
@@ -541,13 +542,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: [],
     unlocks: [],
     description:
-      "Lateral sliding movement using toe-floor contact and weight shifting to create smooth side-to-side motion",
+      "Lateral sliding movement using toe-floor contact and precise weight shifting to create controlled side-to-side motion",
     keyPoints: [
-      "Dig toe into floor for control",
-      "Push with opposite foot to create slide",
-      "Practice weight transfer timing",
-      "Focus on smooth, controlled motion",
-      "Master before progressing to continuous glides"
+      "Dig toe of one foot into floor for control and grip",
+      "Push with opposite foot to create lateral sliding motion",
+      "Practice precise weight transfer timing between feet",
+      "Focus on smooth, controlled lateral motion",
+      "Master basic lateral weight transfers before adding gliding"
     ],
     position: { x: 1860, y: 440 },
     completed: false,
@@ -578,13 +579,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["bree-spins"],
     unlocks: [],
     description:
-      "Powerful kick incorporating full body spin before impact, requiring advanced balance and coordination",
+      "Advanced combination of Bree Spins with back kick elements, integrating rotational movement with dynamic kicking techniques",
     keyPoints: [
-      "Master basic kicks and spins separately",
-      "Focus on generating power through rotation",
-      "Practice landing balance after execution",
-      "Coordinate timing for maximum impact",
-      "Build up speed and power gradually"
+      "Master Bree Spins foundation before adding kicks",
+      "Combine spinning running man with back kick timing",
+      "Focus on smooth rotation while maintaining kick control",
+      "Practice balance and coordination during spin-kick transition",
+      "Build up complexity gradually from basic Bree Spins"
     ],
     position: { x: 450, y: 600 },
     completed: false,
@@ -598,13 +599,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["frontside-kickspin"],
     unlocks: [],
     description:
-      "Complete 360-degree rotation combined with kick, requiring advanced technical skill and timing",
+      "Full 360-degree frontside rotation combined with kick technique, representing mastery of rotational shuffle elements",
     keyPoints: [
-      "Master 180-degree versions first",
-      "Focus on generating sufficient height and torque",
-      "Practice spot turns for orientation",
-      "Coordinate kick timing with rotation completion",
-      "Build up gradually from slower rotations"
+      "Master 180 frontside kickspin before attempting full rotation",
+      "Focus on completing full rotation while maintaining kick form",
+      "Use spotting technique to maintain orientation during spin",
+      "Coordinate kick extension with completion of 360-degree turn",
+      "Build up rotation speed gradually to maintain control"
     ],
     position: { x: 1420, y: 600 },
     completed: false,
@@ -619,13 +620,13 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["180-backside-kickspin"],
     unlocks: [],
     description:
-      "Full rotation kick rotating toward back foot, requiring precise timing and advanced technique",
+      "Advanced 360-degree backside rotation with kick, representing ultimate mastery of rotational and kicking shuffle techniques",
     keyPoints: [
-      "Master frontside version first",
-      "Focus on opposite rotation mechanics",
-      "Practice balance and coordination",
-      "Build up power and speed gradually",
-      "Coordinate with music for maximum impact"
+      "Master 180 backside kickspin and 360 frontside first",
+      "Focus on opposite rotation mechanics from frontside version",
+      "Maintain balance throughout full backside rotation",
+      "Coordinate kick timing with complete 360-degree turn",
+      "Represents highest level of shuffle spinning technique"
     ],
     position: { x: 1580, y: 600 },
     completed: false,
@@ -1075,7 +1076,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
             }}
           />
           <Chip
-            label="⚡ SLIDES"
+            label="👟 SLIDES"
             variant={tagFilters.has("slides") ? "filled" : "outlined"}
             onClick={() => {
               const newFilters = new Set(tagFilters);
@@ -1492,7 +1493,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                             : tag === "spins"
                             ? "🌀"
                             : tag === "slides"
-                            ? "🛝"
+                            ? "👟"
                             : ""
                         } ${tag.charAt(0).toUpperCase() + tag.slice(1)}`}
                         color="secondary"

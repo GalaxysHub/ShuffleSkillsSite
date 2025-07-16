@@ -203,9 +203,7 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
                   <CheckCircle color="primary" fontSize="small" />
                 ) : data.isLocked ? (
                   <Lock color="disabled" fontSize="small" />
-                ) : (
-                  getMoveIcon(data.name, data.tags)
-                )}
+                ) : null}
               </Box>
             </Box>
 
@@ -229,7 +227,7 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
                         : tag === "spins"
                         ? "🌀"
                         : tag === "slides"
-                        ? "⚡"
+                        ? "👟"
                         : tag
                     }
                     sx={{
