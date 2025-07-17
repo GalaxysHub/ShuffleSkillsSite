@@ -86,6 +86,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Maintain consistent rhythm",
       "Fundamental building block for shuffle dance"
     ],
+    videoId: "https://media1.tenor.com/m/ozzUue_iplMAAAAC/canticos-dance.gif",
     position: { x: 550, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -112,6 +113,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Foundation for the gliding illusion across floor",
       "Essential building block for advanced combinations"
     ],
+    videoId: "https://media1.tenor.com/m/ts1MvzXTK1YAAAAC/dance-hiphop.gif",
     position: { x: 950, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -131,6 +133,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Twist feet and maintain syncopated rhythm",
       "Foundation for modern swing dance elements"
     ],
+    videoId: "https://media1.tenor.com/m/MIvprR1izQoAAAAC/sewerslvt-shuffle-dance.gif",
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
@@ -1381,12 +1384,12 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                   }}
                 >
                   <img 
-                    src="https://media.tenor.com/BMya17p9R6kAAAAM/merry.gif"
-                    alt="Shuffle dance demo"
+                    src={selectedMove.videoId || "https://media.tenor.com/BMya17p9R6kAAAAM/merry.gif"}
+                    alt={`${selectedMove.name} demo`}
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover',
+                      objectFit: 'contain',
                       borderRadius: '8px'
                     }}
                   />

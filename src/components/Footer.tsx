@@ -96,6 +96,38 @@ const Footer: React.FC = () => {
               </Box>
             </Box>
 
+            {/* Support */}
+            <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+              <Typography variant="h6" gutterBottom fontWeight="bold">
+                Support
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  • Report bugs
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  • Suggest features
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  • Community guidelines
+                </Typography>
+                <Link
+                  component={RouterLink}
+                  to="/contact"
+                  variant="body2"
+                  color="primary"
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { 
+                      textDecoration: 'underline' 
+                    }
+                  }}
+                >
+                  • Contact Us
+                </Link>
+              </Box>
+            </Box>
+
           </Box>
 
           <Divider sx={{ mb: 3 }} />

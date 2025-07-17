@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
 import SkillTreePage from './pages/SkillTreePage';
 import HistoryPage from './pages/HistoryPage';
+import ContactPage from './pages/ContactPage';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -174,6 +175,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<SkillTreePage />} />
                 <Route path="/history" element={<HistoryPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Box>
