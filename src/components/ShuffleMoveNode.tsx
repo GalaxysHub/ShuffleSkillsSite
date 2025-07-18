@@ -7,7 +7,7 @@ import {
   Box,
   useTheme,
 } from "@mui/material";
-import { CheckCircle, Lock, PlayArrow, Flag, DirectionsRun, Sports, RotateRight, SportsGymnastics, SportsHandball, Skateboarding, CatchingPokemon, Timeline, ThreeP, Transform, TrendingUp, TrendingDown, DirectionsWalk } from "@mui/icons-material";
+import { CheckCircle, Lock, Flag } from "@mui/icons-material";
 import { Handle, Position } from "reactflow";
 import type { NodeProps } from "reactflow";
 
@@ -40,81 +40,6 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
       default:
         return theme.palette.grey[500];
     }
-  };
-
-  const getMoveIcon = (moveName: string, tags?: string[]) => {
-    const lowerName = moveName.toLowerCase();
-    
-    // Running-based moves
-    if (lowerName.includes('running')) {
-      return <DirectionsRun color="action" fontSize="small" />;
-    }
-    
-    // T-Step and variations
-    if (lowerName.includes('t-step') || lowerName.includes('t-step')) {
-      return <Transform color="action" fontSize="small" />;
-    }
-    
-    // Charleston
-    if (lowerName.includes('charleston')) {
-      return <SportsHandball color="action" fontSize="small" />;
-    }
-    
-    // Spinning moves
-    if (lowerName.includes('spin') || lowerName.includes('bree')) {
-      return <RotateRight color="action" fontSize="small" />;
-    }
-    
-    // Kick moves
-    if (lowerName.includes('kick') || lowerName.includes('sacco')) {
-      return <SportsGymnastics color="action" fontSize="small" />;
-    }
-    
-    // Gliding/sliding moves
-    if (lowerName.includes('glide') || lowerName.includes('moonwalk')) {
-      return <DirectionsWalk color="action" fontSize="small" />;
-    }
-    
-    // V-Step and W/M Step
-    if (lowerName.includes('v-step') || lowerName.includes('w/m')) {
-      return <Timeline color="action" fontSize="small" />;
-    }
-    
-    // Cowtail
-    if (lowerName.includes('cowtail')) {
-      return <CatchingPokemon color="action" fontSize="small" />;
-    }
-    
-    // Polly Pocket
-    if (lowerName.includes('polly') || lowerName.includes('x-step')) {
-      return <ThreeP color="action" fontSize="small" />;
-    }
-    
-    // Circle moves
-    if (lowerName.includes('circle')) {
-      return <Sports color="action" fontSize="small" />;
-    }
-    
-    // Side moves
-    if (lowerName.includes('side') && !lowerName.includes('kick')) {
-      return <TrendingUp color="action" fontSize="small" />;
-    }
-    
-    // Default based on tags
-    if (tags && tags.length > 0) {
-      if (tags.includes('kick')) {
-        return <SportsGymnastics color="action" fontSize="small" />;
-      }
-      if (tags.includes('spins')) {
-        return <RotateRight color="action" fontSize="small" />;
-      }
-      if (tags.includes('slides')) {
-        return <DirectionsWalk color="action" fontSize="small" />;
-      }
-    }
-    
-    // Default fallback
-    return <DirectionsRun color="action" fontSize="small" />;
   };
 
   return (

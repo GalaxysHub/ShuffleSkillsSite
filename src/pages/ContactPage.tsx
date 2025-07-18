@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Typography,
-  Paper,
   Container,
   Card,
   CardContent,
@@ -13,7 +12,6 @@ import {
 import { 
   Email, 
   GitHub, 
-  Twitter, 
   ContactMail, 
   Feedback,
   BugReport,
