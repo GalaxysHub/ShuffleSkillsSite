@@ -76,6 +76,14 @@ const Navbar: React.FC = () => {
             
             <Box sx={{ flexGrow: 1 }} />
             
+            {/* Navigation */}
+            <Button color="inherit" onClick={() => navigate('/upload-move')} sx={{ mr: 1 }}>
+              Upload Move
+            </Button>
+            <Button color="inherit" onClick={() => navigate('/contact')} sx={{ mr: 1 }}>
+              Contact
+            </Button>
+            
             {/* Theme Toggle */}
             <IconButton
               color="inherit"

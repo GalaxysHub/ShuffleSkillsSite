@@ -1,0 +1,110 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+        (firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+    }
+    
+    // Helper function to validate video file types
+    function isValidVideoType() {
+      return request.resource.contentType.matches('video/.*') ||
+             request.resource.contentType in ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-msvideo'];
+    }
+    
+    // Helper function to validate image file types
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/.*') &&
+             request.resource.contentType in ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    }
+    
+    // Helper function to check file name validity (prevent path traversal)
+    function hasValidFileName(fileName) {
+      return !fileName.matches('.*[/\\\\].*') && 
+             !fileName.matches('.*\\.\\..*') &&
+             fileName.size() > 0 &&
+             fileName.size() < 255;
+    }
+    
+    // Videos folder - Only admins can upload, public can read
+    match /videos/{videoId} {
+      allow read: if true; // Public can read videos for streaming
+      allow write: if isAdmin() && 
+        isValidVideoType() &&
+        request.resource.size < 500 * 1024 * 1024 && // Max 500MB
+        hasValidFileName(videoId);
+      allow delete: if isAdmin();
+    }
+    
+    // Thumbnails folder - Only admins can upload, public can read
+    match /thumbnails/{thumbnailId} {
+      allow read: if true; // Public can read thumbnails
+      allow write: if isAdmin() && 
+        isValidImageType() &&
+        request.resource.size < 5 * 1024 * 1024 && // Max 5MB
+        hasValidFileName(thumbnailId);
+      allow delete: if isAdmin();
+    }
+    
+    // Images folder - Only admins can upload, public can read
+    match /images/{imageId} {
+      allow read: if true; // Public can read images
+      allow write: if isAdmin() && 
+        isValidImageType() &&
+        request.resource.size < 10 * 1024 * 1024 && // Max 10MB
+        hasValidFileName(imageId);
+      allow delete: if isAdmin();
+    }
+    
+    // GIFs folder - Authenticated users can upload, public can read
+    match /gifs/{gifId} {
+      allow read: if true; // Public can read GIFs
+      allow write: if request.auth != null && 
+        isValidImageType() &&
+        request.resource.size < 10 * 1024 * 1024 && // Max 10MB
+        hasValidFileName(gifId);
+      allow delete: if isAdmin();
+    }
+    
+    // Moves folder - Authenticated users can upload, public can read
+    match /moves/{moveFile} {
+      allow read: if true; // Public can read move files
+      allow write: if request.auth != null && 
+        (isValidImageType() || isValidVideoType()) &&
+        request.resource.size < 50 * 1024 * 1024 && // Max 50MB for videos
+        hasValidFileName(moveFile);
+      allow delete: if isAdmin();
+    }
+    
+    // User profile images - Users can upload their own, admins can manage all
+    match /profile-images/{userId}/{imageId} {
+      allow read: if true; // Public can read profile images
+      allow write: if (request.auth != null && request.auth.uid == userId && isValidImageType() && request.resource.size < 2 * 1024 * 1024) || isAdmin(); // Max 2MB for profiles
+      allow delete: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+    }
+    
+    // Admin-only folder for sensitive content
+    match /admin/{allPaths=**} {
+      allow read, write, delete: if isAdmin();
+    }
+    
+    // Temp uploads folder - Short-term storage for processing
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Public assets folder - Read-only for everyone, admin-only write
+    match /public/{allPaths=**} {
+      allow read: if true; // Public assets like logos, etc.
+      allow write, delete: if isAdmin();
+    }
+    
+    // Deny all other paths by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

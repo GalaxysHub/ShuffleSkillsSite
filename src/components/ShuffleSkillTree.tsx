@@ -86,7 +86,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Maintain consistent rhythm",
       "Fundamental building block for shuffle dance"
     ],
-    videoId: "https://media1.tenor.com/m/ozzUue_iplMAAAAC/canticos-dance.gif",
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Frunning-man.gif?alt=media&token=",
     position: { x: 550, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -100,6 +100,7 @@ const shuffleMoves: ShuffleMove[] = [
     unlocks: [
       "reverse-t-step",
       "t-step-variations",
+      "advanced-t-step-variations",
       "shaper-t-step",
       "sacco-kicks",
       "w-m-step",
@@ -113,7 +114,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Foundation for the gliding illusion across floor",
       "Essential building block for advanced combinations"
     ],
-    videoId: "https://media1.tenor.com/m/ts1MvzXTK1YAAAAC/dance-hiphop.gif",
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ft-step.gif?alt=media",
     position: { x: 950, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -133,7 +134,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Twist feet and maintain syncopated rhythm",
       "Foundation for modern swing dance elements"
     ],
-    videoId: "https://media1.tenor.com/m/MIvprR1izQoAAAAC/sewerslvt-shuffle-dance.gif",
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fcharleston.gif?alt=media",
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
@@ -159,7 +160,7 @@ const shuffleMoves: ShuffleMove[] = [
   {
     id: "reverse-t-step",
     name: "Reverse T-Step",
-    difficulty: "beginner",
+    difficulty: "intermediate",
     prerequisites: ["t-step"],
     unlocks: [],
     description: "Backward variation of T-Step with heel-toe movements in reverse direction, maintaining T-shape while traveling backward",
@@ -356,7 +357,7 @@ const shuffleMoves: ShuffleMove[] = [
     name: "Bree Spins",
     difficulty: "intermediate",
     prerequisites: ["running-man", "reverse-running-man"],
-    unlocks: ["spinning-backkick"],
+    unlocks: [],
     description:
       "Running man combined with spinning elements, named after Bree, creating rotational movement while maintaining the running man rhythm",
     keyPoints: [
@@ -477,6 +478,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Extension and control focus",
       "Rhythmic coordination with footwork",
     ],
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ffront-hook-kick.gif?alt=media",
     position: { x: 1420, y: 340 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -575,26 +577,6 @@ const shuffleMoves: ShuffleMove[] = [
   },
 
   // Advanced Moves (Level 3)
-  {
-    id: "spinning-backkick",
-    name: "Spinning Back Kick",
-    difficulty: "advanced",
-    prerequisites: ["bree-spins"],
-    unlocks: [],
-    description:
-      "Advanced combination of Bree Spins with back kick elements, integrating rotational movement with dynamic kicking techniques",
-    keyPoints: [
-      "Master Bree Spins foundation before adding kicks",
-      "Combine spinning running man with back kick timing",
-      "Focus on smooth rotation while maintaining kick control",
-      "Practice balance and coordination during spin-kick transition",
-      "Build up complexity gradually from basic Bree Spins"
-    ],
-    position: { x: 450, y: 600 },
-    completed: false,
-    styles: ["melbourne"],
-    tags: ["kick", "spins", "slides"],
-  },
   {
     id: "360-frontside-kickspin",
     name: "360 Frontside Kickspin",

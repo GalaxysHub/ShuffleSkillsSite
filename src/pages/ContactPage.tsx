@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -6,21 +6,93 @@ import {
   Card,
   CardContent,
   Stack,
-  Link,
+  TextField,
   Button,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { 
-  Email, 
-  GitHub, 
   ContactMail, 
-  Feedback,
-  BugReport,
-  Lightbulb 
+  Send,
 } from "@mui/icons-material";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { db } from "../config/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ContactPage: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess(false);
+    
+    // Validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let userIp = '';
+      
+      // Get user's IP address
+      try {
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        userIp = ipData.ip;
+      } catch (ipError) {
+        console.warn('Could not fetch IP address:', ipError);
+      }
+      
+      // Add to Firebase
+      await addDoc(collection(db, "contact-inquiries"), {
+        ...formData,
+        submitterIp: userIp,
+        userAgent: navigator.userAgent,
+        createdAt: serverTimestamp(),
+        status: "new", // Track inquiry status
+      });
+
+      setSuccess(true);
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      setError("Failed to submit form. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -53,9 +125,8 @@ const ContactPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Contact Information */}
+        {/* Contact Form */}
         <Stack spacing={4}>
-          {/* Main Contact Card */}
           <Card elevation={3}>
             <CardContent sx={{ p: 4 }}>
               <Typography
@@ -64,7 +135,7 @@ const ContactPage: React.FC = () => {
                 gutterBottom
                 sx={{ fontFamily: '"Orbitron", sans-serif' }}
               >
-                Get In Touch
+                Send us a Message
               </Typography>
               <Typography variant="body1" paragraph>
                 We'd love to hear from you! Whether you have questions, feedback, 
@@ -72,88 +143,75 @@ const ContactPage: React.FC = () => {
                 to reach out.
               </Typography>
               
-              <Stack spacing={3} sx={{ mt: 3 }}>
-                {/* Email Contact */}
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Email sx={{ mr: 2, color: "primary.main" }} />
-                  <Box>
-                    <Typography variant="h6">Email</Typography>
-                    <Link
-                      href="mailto:contact@shuffleskilltree.com"
-                      color="primary"
-                      sx={{ textDecoration: "none" }}
-                    >
-                      contact@shuffleskilltree.com
-                    </Link>
-                  </Box>
-                </Box>
+              {success && (
+                <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(false)}>
+                  Thank you for your message! We'll get back to you soon.
+                </Alert>
+              )}
 
-                {/* GitHub */}
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <GitHub sx={{ mr: 2, color: "primary.main" }} />
-                  <Box>
-                    <Typography variant="h6">GitHub</Typography>
-                    <Link
-                      href="https://github.com/GalaxysHub/ShuffleSkillsSite"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      color="primary"
-                      sx={{ textDecoration: "none" }}
-                    >
-                      Project Repository
-                    </Link>
-                    <Typography variant="body2" color="text.secondary">
-                      Report bugs, suggest features, or contribute to the project
-                    </Typography>
-                  </Box>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+              {error && (
+                <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+                  {error}
+                </Alert>
+              )}
 
-          {/* Quick Actions */}
-          <Card elevation={3}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography
-                variant="h5"
-                gutterBottom
-                sx={{ fontFamily: '"Orbitron", sans-serif' }}
-              >
-                Quick Actions
-              </Typography>
-              
-              <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 2 }}>
-                <Button
-                  variant="contained"
-                  startIcon={<BugReport />}
-                  href="https://github.com/GalaxysHub/ShuffleSkillsSite/issues/new?template=bug_report.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ flex: 1 }}
-                >
-                  Report a Bug
-                </Button>
-                
-                <Button
-                  variant="contained"
-                  startIcon={<Lightbulb />}
-                  href="https://github.com/GalaxysHub/ShuffleSkillsSite/issues/new?template=feature_request.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ flex: 1 }}
-                >
-                  Suggest Feature
-                </Button>
-                
-                <Button
-                  variant="outlined"
-                  startIcon={<Feedback />}
-                  href="mailto:contact@shuffleskilltree.com?subject=Feedback"
-                  sx={{ flex: 1 }}
-                >
-                  Send Feedback
-                </Button>
-              </Stack>
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    label="Your Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                  
+                  <TextField
+                    fullWidth
+                    label="Your Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                  
+                  <TextField
+                    fullWidth
+                    label="Subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                  
+                  <TextField
+                    fullWidth
+                    label="Message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    multiline
+                    rows={6}
+                    required
+                    disabled={loading}
+                  />
+                  
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    startIcon={loading ? <CircularProgress size={20} /> : <Send />}
+                    disabled={loading}
+                    sx={{ alignSelf: "flex-start" }}
+                  >
+                    {loading ? "Sending..." : "Send Message"}
+                  </Button>
+                </Stack>
+              </Box>
             </CardContent>
           </Card>
 
@@ -180,17 +238,17 @@ const ContactPage: React.FC = () => {
                 </li>
                 <li>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Be specific:</strong> When reporting issues, include details about your browser, device, and steps to reproduce
+                    <strong>Be specific:</strong> When reporting issues, include details about what you're experiencing
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Be patient:</strong> We're a small team working on this project in our spare time
+                    <strong>Be patient:</strong> We'll respond to your inquiry as soon as possible
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Check existing issues:</strong> Before creating a new GitHub issue, check if someone has already reported it
+                    <strong>Be constructive:</strong> We appreciate feedback that helps improve the platform
                   </Typography>
                 </li>
               </Box>
@@ -214,19 +272,19 @@ const ContactPage: React.FC = () => {
                     Q: Is this app free to use?
                   </Typography>
                   <Typography variant="body1">
-                    A: Yes! Shuffle Skill Tree is completely free and open-source. 
-                    You can use it without any cost or registration required.
+                    A: Yes! Shuffle Skill Tree is completely free to use. 
+                    You can access all features without any cost.
                   </Typography>
                 </Box>
                 
                 <Box>
                   <Typography variant="h6" color="primary">
-                    Q: Can I contribute to the project?
+                    Q: How do I suggest new moves?
                   </Typography>
                   <Typography variant="body1">
-                    A: Absolutely! We welcome contributions of all kinds - code, 
-                    documentation, move suggestions, or feedback. Check out our GitHub 
-                    repository to get started.
+                    A: Use the contact form above to send us your move suggestions. 
+                    Include the move name, description, and any relevant details 
+                    about prerequisites or difficulty level.
                   </Typography>
                 </Box>
                 
@@ -243,12 +301,11 @@ const ContactPage: React.FC = () => {
                 
                 <Box>
                   <Typography variant="h6" color="primary">
-                    Q: Are there video tutorials for the moves?
+                    Q: Can I contribute to the platform?
                   </Typography>
                   <Typography variant="body1">
-                    A: Video tutorials are planned for future updates. Currently, 
-                    each move includes detailed descriptions and key learning points 
-                    to help you understand the techniques.
+                    A: We welcome contributions! Use the contact form to let us know 
+                    how you'd like to help improve the Shuffle Skill Tree.
                   </Typography>
                 </Box>
               </Stack>

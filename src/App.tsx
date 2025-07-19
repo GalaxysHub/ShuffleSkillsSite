@@ -7,6 +7,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import SkillTreePage from './pages/SkillTreePage';
 import HistoryPage from './pages/HistoryPage';
 import ContactPage from './pages/ContactPage';
+import UploadMovePage from './pages/UploadMovePage';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -176,6 +177,7 @@ function App() {
                 <Route path="/" element={<SkillTreePage />} />
                 <Route path="/history" element={<HistoryPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/upload-move" element={<UploadMovePage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Box>
