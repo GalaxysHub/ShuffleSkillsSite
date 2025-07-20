@@ -119,14 +119,6 @@ const SkillTreePage: React.FC = () => {
             </Typography>
           </Box>
 
-          {/* Instructions */}
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              <strong>How to use:</strong> Click on any move to see details and
-              mark as completed. Locked moves (🔒) require prerequisites to be
-              completed first. Lines show the progression path between moves.
-            </Typography>
-          </Alert>
 
           {/* Help Notification */}
           <HelpNotification />

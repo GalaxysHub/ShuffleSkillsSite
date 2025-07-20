@@ -12,6 +12,8 @@ import {
   useTheme,
   Checkbox,
   FormControlLabel,
+  Collapse,
+  IconButton,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -21,6 +23,10 @@ import {
   FullscreenExit,
   Flag,
   FlagOutlined,
+  ExpandMore,
+  ExpandLess,
+  Info,
+  Close,
 } from "@mui/icons-material";
 import ReactFlow, {
   Controls,
@@ -409,7 +415,7 @@ const shuffleMoves: ShuffleMove[] = [
   {
     id: "back-kick",
     name: "Back Kick",
-    difficulty: "intermediate",
+    difficulty: "advanced",
     prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description:
@@ -645,6 +651,34 @@ const shuffleMoves: ShuffleMove[] = [
 
   // Advanced Moves (Level 3)
 ];
+
+const HowToUseInstructions: React.FC = () => {
+  const [open, setOpen] = useState(true);
+
+  if (!open) return null;
+
+  return (
+    <Alert 
+      severity="info" 
+      icon={<Info />}
+      action={
+        <IconButton
+          size="small"
+          onClick={() => setOpen(false)}
+        >
+          <Close fontSize="inherit" />
+        </IconButton>
+      }
+      sx={{ mb: 3 }}
+    >
+      <Typography variant="body2">
+        <strong>How to use:</strong> Click on any move to see details and
+        mark as completed. Locked moves (🔒) require prerequisites to be
+        completed first. Lines show the progression path between moves.
+      </Typography>
+    </Alert>
+  );
+};
 
 const ShuffleSkillTreeComponent: React.FC = () => {
   const theme = useTheme();
@@ -929,6 +963,9 @@ const ShuffleSkillTreeComponent: React.FC = () => {
 
   return (
     <Box>
+      {/* Instructions */}
+      <HowToUseInstructions />
+      
       {/* Full Screen Toggle */}
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button

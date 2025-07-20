@@ -22,7 +22,7 @@ const HelpNotification: React.FC = () => {
   return (
     <Box sx={{ mb: 2 }}>
       <Alert 
-        severity="info" 
+        severity="success" 
         icon={<Help />}
         action={
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
