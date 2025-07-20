@@ -1467,7 +1467,8 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                 <Box
                   sx={{
                     width: isMobile ? '100%' : 320,
-                    height: isMobile ? 200 : 240,
+                    height: isMobile ? '100%' : 320,
+                    aspectRatio: '1 / 1',
                     borderRadius: 2,
                     display: 'flex',
                     alignItems: 'center',
