@@ -12,7 +12,6 @@ import {
   useTheme,
   Checkbox,
   FormControlLabel,
-  Collapse,
   IconButton,
 } from "@mui/material";
 import {
@@ -23,8 +22,6 @@ import {
   FullscreenExit,
   Flag,
   FlagOutlined,
-  ExpandMore,
-  ExpandLess,
   Info,
   Close,
 } from "@mui/icons-material";
