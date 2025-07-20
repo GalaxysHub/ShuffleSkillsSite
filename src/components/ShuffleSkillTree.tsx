@@ -732,7 +732,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
   };
 
   const isUnlocked = (move: ShuffleMove) => {
-    return move.prerequisites.every((prereq) => completedMoves.has(prereq));
+    return true; // Unlock all cards for now
   };
 
 
