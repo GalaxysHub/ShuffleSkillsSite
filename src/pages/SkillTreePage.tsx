@@ -7,6 +7,7 @@ import { db } from "../config/firebase";
 import ShuffleSkillTree from "../components/ShuffleSkillTree";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import HelpNotification from "../components/HelpNotification";
 
 const SkillTreePage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -126,6 +127,9 @@ const SkillTreePage: React.FC = () => {
               completed first. Lines show the progression path between moves.
             </Typography>
           </Alert>
+
+          {/* Help Notification */}
+          <HelpNotification />
 
           {/* Statistics */}
           <Paper sx={{ p: 3, mb: 3 }}>

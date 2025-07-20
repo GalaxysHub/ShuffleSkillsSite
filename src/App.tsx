@@ -8,6 +8,8 @@ import SkillTreePage from './pages/SkillTreePage';
 import HistoryPage from './pages/HistoryPage';
 import ContactPage from './pages/ContactPage';
 import UploadMovePage from './pages/UploadMovePage';
+import CommunityGuidelinesPage from './pages/CommunityGuidelinesPage';
+import FAQPage from './pages/FAQPage';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -178,6 +180,8 @@ function App() {
                 <Route path="/history" element={<HistoryPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/upload-move" element={<UploadMovePage />} />
+                <Route path="/guidelines" element={<CommunityGuidelinesPage />} />
+                <Route path="/faq" element={<FAQPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Box>

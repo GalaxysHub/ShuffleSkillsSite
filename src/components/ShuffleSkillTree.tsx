@@ -142,7 +142,7 @@ const shuffleMoves: ShuffleMove[] = [
   {
     id: "reverse-running-man",
     name: "Reverse Running Man",
-    difficulty: "beginner",
+    difficulty: "intermediate",
     prerequisites: ["running-man"],
     unlocks: ["bree-spins"],
     description: "Backward variation where you slide the back leg forward instead of backward, creating the illusion of running backward in place",
@@ -156,6 +156,7 @@ const shuffleMoves: ShuffleMove[] = [
     position: { x: 450, y: 180 },
     completed: false,
     styles: ["melbourne", "shapes"],
+    tags: ["slides"],
   },
   {
     id: "reverse-t-step",
@@ -386,33 +387,55 @@ const shuffleMoves: ShuffleMove[] = [
   },
   {
     id: "frontside-kickspin",
-    name: "180 Frontside Kickspin",
-    difficulty: "intermediate",
+    name: "Frontside Kickspin",
+    difficulty: "advanced",
     prerequisites: ["running-man", "t-step"],
-    unlocks: ["360-frontside-kickspin"],
+    unlocks: [],
     description:
-      "Dynamic move combining 180-degree rotation with kicking motion, rotating toward the front foot direction",
+      "Dynamic move combining rotation with kicking motion, rotating toward the front foot direction",
     keyPoints: [
       "Initiate kick with front leg while beginning rotation",
-      "Use planted foot as pivot point for 180-degree turn",
+      "Use planted foot as pivot point for rotation",
       "Complete rotation as kick reaches full extension",
       "Generate rotation through upper body torque",
       "Coordinate kick timing with spin completion"
     ],
-    position: { x: 1420, y: 390 },
+    position: { x: 1420, y: 600 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick", "spins"],
     category: "kick-spins-category",
   },
   {
-    id: "180-backside-kickspin",
-    name: "Back Kick/180 Backside Kick",
+    id: "back-kick",
+    name: "Back Kick",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
-    unlocks: ["360-backside-kickspin"],
+    unlocks: [],
     description:
-      "Advanced 180-degree backside rotation combined with kick, rotating toward the back foot with precise landing control",
+      "Fundamental back kicking technique that can be performed standalone or integrated into shuffle sequences",
+    keyPoints: [
+      "Execute kick backward with control and precision",
+      "Maintain balance on supporting leg",
+      "Keep core engaged throughout movement",
+      "Focus on smooth extension and retraction",
+      "Practice proper timing with shuffle rhythm"
+    ],
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fback-kick.gif?alt=media",
+    position: { x: 1580, y: 450 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick"],
+    category: "kick-spins-category",
+  },
+  {
+    id: "backside-kickspin",
+    name: "Backside Kickspin",
+    difficulty: "advanced",
+    prerequisites: ["running-man", "t-step"],
+    unlocks: [],
+    description:
+      "Advanced backside rotation combined with kick, rotating toward the back foot with precise landing control",
     keyPoints: [
       "Start with weight on front foot for proper setup",
       "Initiate kick with back leg while beginning backside rotation",
@@ -420,10 +443,53 @@ const shuffleMoves: ShuffleMove[] = [
       "Requires greater balance control than frontside version",
       "Focus on controlled landing and stability after completion"
     ],
-    position: { x: 1580, y: 390 },
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fbackside-kickspin.gif?alt=media",
+    position: { x: 1580, y: 600 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick", "spins"],
+    category: "kick-spins-category",
+  },
+  {
+    id: "mikki-kicks",
+    name: "Mikki Kicks",
+    difficulty: "intermediate",
+    prerequisites: ["running-man", "t-step"],
+    unlocks: [],
+    description:
+      "Dynamic kicking technique named after Mikki, featuring rapid alternating kicks with shuffle footwork integration",
+    keyPoints: [
+      "Execute rapid alternating front kicks",
+      "Maintain shuffle rhythm while kicking",
+      "Keep kicks controlled and balanced",
+      "Integrate seamlessly with T-step transitions",
+      "Focus on speed and precision over height"
+    ],
+    position: { x: 1250, y: 380 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick", "spins"],
+    category: "kick-spins-category",
+  },
+  {
+    id: "front-kick",
+    name: "Front Kick",
+    difficulty: "intermediate",
+    prerequisites: ["running-man", "t-step"],
+    unlocks: [],
+    description:
+      "Fundamental forward kicking technique that can be performed standalone or integrated into shuffle sequences",
+    keyPoints: [
+      "Execute kick forward with control and precision",
+      "Maintain balance on supporting leg",
+      "Keep core engaged throughout movement",
+      "Focus on smooth extension and retraction",
+      "Practice proper timing with shuffle rhythm"
+    ],
+    position: { x: 1420, y: 450 },
+    completed: false,
+    styles: ["melbourne"],
+    tags: ["kick"],
     category: "kick-spins-category",
   },
   {
@@ -440,6 +506,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Rhythm control",
       "Leg positioning",
     ],
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fsacco-kicks.gif?alt=media",
     position: { x: 1100, y: 380 },
     completed: false,
     styles: ["melbourne"],
@@ -459,7 +526,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Balance and stability focus",
       "Rhythmic coordination with footwork",
     ],
-    position: { x: 1580, y: 340 },
+    position: { x: 1580, y: 290 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["kick"],
@@ -471,15 +538,15 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description:
-      "Dynamic forward kicking technique featuring hooking leg motions that combine front kicks with shuffle foundations",
+      "Dynamic forward kicking technique similar to kicking a soccer ball, featuring a scooping motion that combines front kicks with shuffle foundations and musical timing",
     keyPoints: [
-      "Forward hooking leg motion",
-      "Controlled front kick technique",
-      "Extension and control focus",
-      "Rhythmic coordination with footwork",
+      "Kick motion similar to striking a soccer ball",
+      "Foot is up on the upbeat of the music",
+      "Down beat occurs when foot is at the lower point",
+      "Forward hooking leg motion with controlled extension",
     ],
     videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ffront-hook-kick.gif?alt=media",
-    position: { x: 1420, y: 340 },
+    position: { x: 1420, y: 290 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["kick"],
@@ -577,48 +644,6 @@ const shuffleMoves: ShuffleMove[] = [
   },
 
   // Advanced Moves (Level 3)
-  {
-    id: "360-frontside-kickspin",
-    name: "360 Frontside Kickspin",
-    difficulty: "advanced",
-    prerequisites: ["frontside-kickspin"],
-    unlocks: [],
-    description:
-      "Full 360-degree frontside rotation combined with kick technique, representing mastery of rotational shuffle elements",
-    keyPoints: [
-      "Master 180 frontside kickspin before attempting full rotation",
-      "Focus on completing full rotation while maintaining kick form",
-      "Use spotting technique to maintain orientation during spin",
-      "Coordinate kick extension with completion of 360-degree turn",
-      "Build up rotation speed gradually to maintain control"
-    ],
-    position: { x: 1420, y: 600 },
-    completed: false,
-    styles: ["melbourne"],
-    tags: ["kick", "spins"],
-    category: "kick-spins-category",
-  },
-  {
-    id: "360-backside-kickspin",
-    name: "360 Backside Kickspin",
-    difficulty: "advanced",
-    prerequisites: ["180-backside-kickspin"],
-    unlocks: [],
-    description:
-      "Advanced 360-degree backside rotation with kick, representing ultimate mastery of rotational and kicking shuffle techniques",
-    keyPoints: [
-      "Master 180 backside kickspin and 360 frontside first",
-      "Focus on opposite rotation mechanics from frontside version",
-      "Maintain balance throughout full backside rotation",
-      "Coordinate kick timing with complete 360-degree turn",
-      "Represents highest level of shuffle spinning technique"
-    ],
-    position: { x: 1580, y: 600 },
-    completed: false,
-    styles: ["melbourne"],
-    tags: ["kick", "spins"],
-    category: "kick-spins-category",
-  },
 ];
 
 const ShuffleSkillTreeComponent: React.FC = () => {

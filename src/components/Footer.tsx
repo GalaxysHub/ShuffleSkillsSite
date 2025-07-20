@@ -102,15 +102,34 @@ const Footer: React.FC = () => {
                 Support
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="body2" color="text.secondary">
-                  • Report bugs
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  • Suggest features
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  • Community guidelines
-                </Typography>
+                <Link
+                  component={RouterLink}
+                  to="/faq"
+                  variant="body2"
+                  color="primary"
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { 
+                      textDecoration: 'underline' 
+                    }
+                  }}
+                >
+                  • FAQ
+                </Link>
+                <Link
+                  component={RouterLink}
+                  to="/guidelines"
+                  variant="body2"
+                  color="primary"
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { 
+                      textDecoration: 'underline' 
+                    }
+                  }}
+                >
+                  • Community Guidelines
+                </Link>
                 <Link
                   component={RouterLink}
                   to="/contact"

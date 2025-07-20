@@ -35,6 +35,7 @@ interface MoveFormData {
   keyPoints: string[];
   styles: string[];
   tags: string[];
+  sourceUrl: string;
 }
 
 const difficultyOptions = ['beginner', 'intermediate', 'advanced'];
@@ -58,7 +59,8 @@ export default function UploadMovePage() {
     description: '',
     keyPoints: [''],
     styles: [],
-    tags: []
+    tags: [],
+    sourceUrl: ''
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -188,7 +190,8 @@ export default function UploadMovePage() {
         description: '',
         keyPoints: [''],
         styles: [],
-        tags: []
+        tags: [],
+        sourceUrl: ''
       });
       setFile(null);
     } catch (err) {
@@ -280,6 +283,17 @@ export default function UploadMovePage() {
                   required
                   disabled={loading}
                   placeholder="Describe the move, its origins, and what makes it unique"
+                />
+
+                <TextField
+                  fullWidth
+                  label="Source URL (Optional)"
+                  name="sourceUrl"
+                  value={formData.sourceUrl}
+                  onChange={handleInputChange}
+                  disabled={loading}
+                  placeholder="https://example.com/original-video or credit source"
+                  helperText="Link to original video, tutorial, or source where this move was learned"
                 />
 
                 {/* Prerequisites */}
