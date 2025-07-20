@@ -115,7 +115,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Essential building block for advanced combinations"
     ],
     videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ft-step.gif?alt=media",
-    position: { x: 950, y: 50 },
+    position: { x: 1050, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
   },
@@ -538,7 +538,7 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description:
-      "Dynamic forward kicking technique similar to kicking a soccer ball, featuring a scooping motion that combines front kicks with shuffle foundations and musical timing",
+      "Dynamic forward kicking technique similar to kicking a soccer ball with a scooping motion",
     keyPoints: [
       "Kick motion similar to striking a soccer ball",
       "Foot is up on the upbeat of the music",
