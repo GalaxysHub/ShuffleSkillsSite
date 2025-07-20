@@ -2,6 +2,8 @@
 
 An interactive web application for tracking shuffle dance learning progress using a skill tree visualization.
 
+Built with ❤️ for the shuffle dance community.
+
 ## Features
 
 - **User Authentication**: Sign up/login with email or Google
