@@ -1130,7 +1130,15 @@ const ShuffleSkillTreeComponent: React.FC = () => {
         </Box>
 
         {/* Level Filter */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 3 }}>
+        <Box sx={{ 
+          display: "flex", 
+          gap: 1, 
+          alignItems: "center", 
+          mb: 3,
+          flexWrap: "wrap",
+          overflowX: isMobile ? "auto" : "visible",
+          paddingBottom: isMobile ? 1 : 0,
+        }}>
           <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
             LEVEL:
           </Typography>
@@ -1335,6 +1343,9 @@ const ShuffleSkillTreeComponent: React.FC = () => {
           minZoom={isMobile ? 0.5 : 0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: isMobile ? 0.6 : 0.8 }}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          elementsSelectable={false}
           proOptions={{ hideAttribution: true }}
         >
           <Background />

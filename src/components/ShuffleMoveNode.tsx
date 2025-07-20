@@ -60,8 +60,8 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
 
       <Card
         sx={{
-          width: isMobile ? 200 : isTablet ? 175 : 150,
-          height: isMobile ? 140 : isTablet ? 130 : 120,
+          width: isMobile ? 180 : isTablet ? 165 : 150,
+          height: isMobile ? 120 : isTablet ? 120 : 120,
           cursor: "pointer",
           border: data.isCompleted
             ? `3px solid ${theme.palette.primary.main}`
