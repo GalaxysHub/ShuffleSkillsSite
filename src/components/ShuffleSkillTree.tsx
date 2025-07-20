@@ -306,24 +306,7 @@ const shuffleMoves: ShuffleMove[] = [
     ],
     position: { x: 1250, y: 250 },
     completed: false,
-    styles: ["melbourne", "shapes"],
-  },
-  {
-    id: "v-step",
-    name: "V-Step",
-    difficulty: "beginner",
-    prerequisites: ["t-step"],
-    unlocks: [],
-    description: "V-shaped movement pattern with outward and inward foot positioning",
-    keyPoints: [
-      "V formation with feet",
-      "Outward then inward motion",
-      "Balance and control",
-      "Smooth transitions",
-    ],
-    position: { x: 1250, y: 250 },
-    completed: false,
-    styles: ["melbourne", "shapes"],
+    styles: ["shapes"],
   },
 
   // Intermediate Combinations (Level 2)
