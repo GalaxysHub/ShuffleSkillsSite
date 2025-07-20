@@ -1360,7 +1360,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
           minZoom={isMobile ? 0.5 : 0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: isMobile ? 0.6 : 0.8 }}
-          nodesDraggable={true}
+          nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={true}
           proOptions={{ hideAttribution: true }}
