@@ -732,7 +732,8 @@ const ShuffleSkillTreeComponent: React.FC = () => {
   };
 
   const isUnlocked = (move: ShuffleMove) => {
-    return true; // Unlock all cards for now
+    if (move.prerequisites.length === 0) return true;
+    return move.prerequisites.every((prereq) => completedMoves.has(prereq));
   };
 
 
@@ -1359,9 +1360,9 @@ const ShuffleSkillTreeComponent: React.FC = () => {
           minZoom={isMobile ? 0.5 : 0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: isMobile ? 0.6 : 0.8 }}
-          nodesDraggable={false}
+          nodesDraggable={true}
           nodesConnectable={false}
-          elementsSelectable={false}
+          elementsSelectable={true}
           proOptions={{ hideAttribution: true }}
         >
           <Background />
