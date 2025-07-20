@@ -376,7 +376,7 @@ const shuffleMoves: ShuffleMove[] = [
     id: "frontside-kickspin",
     name: "Frontside Kickspin",
     difficulty: "advanced",
-    prerequisites: ["running-man", "t-step"],
+    prerequisites: ["running-man", "t-step", "front-hook-kick"],
     unlocks: [],
     description:
       "Dynamic move combining rotation with kicking motion, rotating toward the front foot direction",
@@ -419,7 +419,7 @@ const shuffleMoves: ShuffleMove[] = [
     id: "backside-kickspin",
     name: "Backside Kickspin",
     difficulty: "advanced",
-    prerequisites: ["running-man", "t-step"],
+    prerequisites: ["running-man", "t-step", "back-kick"],
     unlocks: [],
     description:
       "Advanced backside rotation combined with kick, rotating toward the back foot with precise landing control",
