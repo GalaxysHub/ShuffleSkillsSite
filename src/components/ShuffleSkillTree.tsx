@@ -10,6 +10,7 @@ import {
   DialogActions,
   Alert,
   useTheme,
+  useMediaQuery,
   Checkbox,
   FormControlLabel,
   IconButton,
@@ -662,6 +663,7 @@ const HowToUseInstructions: React.FC = () => {
 
 const ShuffleSkillTreeComponent: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentUser } = useAuth();
   const [selectedMove, setSelectedMove] = useState<ShuffleMove | null>(null);
   const [completedMoves, setCompletedMoves] = useState<Set<string>>(new Set());
@@ -1329,10 +1331,10 @@ const ShuffleSkillTreeComponent: React.FC = () => {
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
-          minZoom={0.1}
+          fitViewOptions={{ padding: isMobile ? 0.1 : 0.2 }}
+          minZoom={isMobile ? 0.5 : 0.1}
           maxZoom={2}
-          defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+          defaultViewport={{ x: 0, y: 0, zoom: isMobile ? 0.6 : 0.8 }}
           proOptions={{ hideAttribution: true }}
         >
           <Background />

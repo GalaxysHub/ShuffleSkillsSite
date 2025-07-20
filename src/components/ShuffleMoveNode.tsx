@@ -6,6 +6,7 @@ import {
   Chip,
   Box,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { CheckCircle, Lock, Flag } from "@mui/icons-material";
 import { Handle, Position } from "reactflow";
@@ -27,6 +28,8 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
   data,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
 
   const getDifficultyColor = (difficulty: string) => {
     const isDark = theme.palette.mode === "dark";
@@ -57,8 +60,8 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
 
       <Card
         sx={{
-          width: 150,
-          height: 120,
+          width: isMobile ? 200 : isTablet ? 175 : 150,
+          height: isMobile ? 140 : isTablet ? 130 : 120,
           cursor: "pointer",
           border: data.isCompleted
             ? `3px solid ${theme.palette.primary.main}`
@@ -98,7 +101,7 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
           <Box
             sx={{
               borderTop: `4px solid ${getDifficultyColor(data.difficulty)}`,
-              p: 1.5,
+              p: isMobile ? 2 : 1.5,
               pb: 1,
             }}
           >
@@ -113,7 +116,7 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
               <Typography
                 variant="h6"
                 sx={{
-                  fontSize: "0.9rem",
+                  fontSize: isMobile ? "1rem" : "0.9rem",
                   fontWeight: "bold",
                   fontFamily: '"Rajdhani", sans-serif',
                   textTransform: "uppercase",
@@ -139,7 +142,10 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
                   display: "flex",
                   gap: 0.5,
                   mb: 1,
-                  flexWrap: "wrap",
+                  flexWrap: isMobile ? "nowrap" : "wrap",
+                  overflowX: isMobile ? "auto" : "visible",
+                  maxWidth: "100%",
+                  pb: isMobile ? 0.5 : 0,
                 }}
               >
                 {data.tags.map((tag) => (
@@ -156,10 +162,13 @@ const ShuffleMoveNode: React.FC<NodeProps<ShuffleMoveNodeData>> = ({
                         : tag
                     }
                     sx={{
-                      fontSize: "0.6rem",
-                      height: "18px",
+                      fontSize: isMobile ? "0.7rem" : "0.6rem",
+                      height: isMobile ? "22px" : "18px",
                       backgroundColor: theme.palette.secondary.light,
                       color: "white",
+                      minWidth: isMobile ? "50px" : "auto",
+                      flexShrink: 0,
+                      whiteSpace: "nowrap",
                     }}
                   />
                 ))}
