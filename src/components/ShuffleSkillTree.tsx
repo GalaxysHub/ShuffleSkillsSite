@@ -963,7 +963,15 @@ const ShuffleSkillTreeComponent: React.FC = () => {
       {/* Filter Chips */}
       <Box sx={{ mb: 3 }}>
         {/* Style Filter */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
+        <Box sx={{ 
+          display: "flex", 
+          gap: 1, 
+          alignItems: "center", 
+          mb: 2,
+          flexWrap: "wrap",
+          overflowX: isMobile ? "auto" : "visible",
+          paddingBottom: isMobile ? 1 : 0,
+        }}>
           <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
             STYLE:
           </Typography>
@@ -1037,7 +1045,15 @@ const ShuffleSkillTreeComponent: React.FC = () => {
         </Box>
 
         {/* Move Filter */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
+        <Box sx={{ 
+          display: "flex", 
+          gap: 1, 
+          alignItems: "center", 
+          mb: 2,
+          flexWrap: "wrap",
+          overflowX: isMobile ? "auto" : "visible",
+          paddingBottom: isMobile ? 1 : 0,
+        }}>
           <Typography variant="h6" sx={{ mr: 1, fontFamily: '"Orbitron", sans-serif' }}>
             MOVE TYPE:
           </Typography>
@@ -1307,7 +1323,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
           top: isFullScreen ? 0 : "auto",
           left: isFullScreen ? 0 : "auto",
           width: isFullScreen ? "100vw" : "100%",
-          height: isFullScreen ? "100vh" : "800px",
+          height: isFullScreen ? "100vh" : isMobile ? "70vh" : "800px",
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: isFullScreen ? 0 : 2,
           backgroundColor: theme.palette.background.paper,
@@ -1357,15 +1373,24 @@ const ShuffleSkillTreeComponent: React.FC = () => {
       <Dialog
         open={!!selectedMove}
         onClose={() => setSelectedMove(null)}
-        maxWidth="md"
+        maxWidth={isMobile ? "sm" : "md"}
         fullWidth
+        fullScreen={isMobile}
         sx={{
           zIndex: isFullScreen ? 10000 : 1300,
+          '& .MuiDialog-paper': {
+            margin: isMobile ? 0 : 3,
+            maxHeight: isMobile ? '100vh' : '90vh',
+          },
         }}
       >
         {selectedMove && (
           <>
-            <DialogTitle>
+            <DialogTitle sx={{
+              px: isMobile ? 2 : 3,
+              pt: isMobile ? 2 : 3,
+              pb: 2,
+            }}>
               <Box
                 sx={{
                   display: "flex",
@@ -1373,7 +1398,12 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h5">{selectedMove.name}</Typography>
+                <Typography 
+                  variant={isMobile ? "h6" : "h5"}
+                  sx={{ fontSize: isMobile ? '1.3rem' : undefined }}
+                >
+                  {selectedMove.name}
+                </Typography>
                 <Chip
                   label={selectedMove.difficulty}
                   sx={{
@@ -1385,22 +1415,48 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                 />
               </Box>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{
+              px: isMobile ? 2 : 3,
+              pb: isMobile ? 2 : 3,
+            }}>
               {/* Move description/info and GIF container */}
-              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: 2, 
+                mb: 2 
+              }}>
                 {/* Left side - Description and Key Points */}
                 <Box sx={{ flex: 1 }}>
-                  <Typography variant="body1" sx={{ mb: 2 }}>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      mb: 2,
+                      fontSize: isMobile ? '0.9rem' : undefined
+                    }}
+                  >
                     {selectedMove.description}
                   </Typography>
                   
-                  <Typography variant="h6" sx={{ mb: 1 }}>
+                  <Typography 
+                    variant={isMobile ? "subtitle1" : "h6"} 
+                    sx={{ 
+                      mb: 1,
+                      fontSize: isMobile ? '1.1rem' : undefined,
+                      fontWeight: 'bold'
+                    }}
+                  >
                     Key Learning Points:
                   </Typography>
                   <Box component="ul" sx={{ mb: 0, pl: 2 }}>
                     {selectedMove.keyPoints.map((point, index) => (
                       <li key={index}>
-                        <Typography variant="body2">{point}</Typography>
+                        <Typography 
+                          variant="body2"
+                          sx={{ fontSize: isMobile ? '0.85rem' : undefined }}
+                        >
+                          {point}
+                        </Typography>
                       </li>
                     ))}
                   </Box>
@@ -1409,8 +1465,8 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                 {/* Right side - GIF placeholder */}
                 <Box
                   sx={{
-                    width: 320,
-                    height: 240,
+                    width: isMobile ? '100%' : 320,
+                    height: isMobile ? 200 : 240,
                     borderRadius: 2,
                     display: 'flex',
                     alignItems: 'center',
@@ -1546,10 +1602,22 @@ const ShuffleSkillTreeComponent: React.FC = () => {
 
               {selectedMove.unlocks.length > 0 && (
                 <>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
+                  <Typography 
+                    variant={isMobile ? "subtitle1" : "h6"} 
+                    sx={{ 
+                      mb: 1,
+                      fontSize: isMobile ? '1.1rem' : undefined,
+                      fontWeight: 'bold'
+                    }}
+                  >
                     Unlocks:
                   </Typography>
-                  <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                  <Box sx={{ 
+                    display: "flex", 
+                    gap: 1, 
+                    flexWrap: "wrap",
+                    overflowX: isMobile ? "auto" : "visible"
+                  }}>
                     {selectedMove.unlocks.map((unlock) => {
                       const unlockMove = shuffleMoves.find(
                         (m) => m.id === unlock
@@ -1572,13 +1640,19 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                 </>
               )}
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{
+              px: isMobile ? 2 : 3,
+              pb: isMobile ? 2 : 3,
+              gap: 1,
+              flexDirection: isMobile ? 'column' : 'row',
+            }}>
               {!completedMoves.has(selectedMove.id) && (
                 <Button
                   onClick={() => toggleGoal(selectedMove.id)}
                   variant={goals.has(selectedMove.id) ? "contained" : "outlined"}
                   startIcon={goals.has(selectedMove.id) ? <Flag /> : <FlagOutlined />}
                   color="warning"
+                  fullWidth={isMobile}
                 >
                   {goals.has(selectedMove.id) ? "Remove Goal" : "Add Goal"}
                 </Button>
@@ -1592,6 +1666,7 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                   !isUnlocked(selectedMove) ||
                   (selectedMove.subComponents && !canCompleteMove(selectedMove))
                 }
+                fullWidth={isMobile}
               >
                 {completedMoves.has(selectedMove.id)
                   ? "Mark Incomplete"
@@ -1599,7 +1674,12 @@ const ShuffleSkillTreeComponent: React.FC = () => {
                   ? "Complete All Components First"
                   : "Mark Complete"}
               </Button>
-              <Button onClick={() => setSelectedMove(null)}>Close</Button>
+              <Button 
+                onClick={() => setSelectedMove(null)}
+                fullWidth={isMobile}
+              >
+                Close
+              </Button>
             </DialogActions>
             {!currentUser && (
               <Box sx={{ p: 2, pt: 0 }}>
