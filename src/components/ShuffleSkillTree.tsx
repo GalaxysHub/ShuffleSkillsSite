@@ -215,7 +215,7 @@ const shuffleMoves: ShuffleMove[] = [
     ],
     position: { x: 550, y: 180 },
     completed: false,
-    styles: ["melbourne", "shapes"],
+    styles: ["shapes"],
   },
   {
     id: "half-step-variations",
@@ -661,7 +661,11 @@ const HowToUseInstructions: React.FC = () => {
   );
 };
 
-const ShuffleSkillTreeComponent: React.FC = () => {
+interface ShuffleSkillTreeProps {
+  onProgressUpdate?: (completedMoves: Set<string>, goals: Set<string>) => void;
+}
+
+const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgressUpdate }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentUser } = useAuth();
@@ -820,6 +824,11 @@ const ShuffleSkillTreeComponent: React.FC = () => {
     }
     setGoals(newGoals);
 
+    // Optimistically update progress
+    if (onProgressUpdate) {
+      onProgressUpdate(completedMoves, newGoals);
+    }
+
     if (currentUser) {
       // Save to Firebase if user is logged in
       await saveProgress(completedMoves, completedSubComponents, newGoals);
@@ -836,6 +845,8 @@ const ShuffleSkillTreeComponent: React.FC = () => {
     }
 
     const newCompleted = new Set(completedMoves);
+    const newGoals = new Set(goals);
+    
     if (newCompleted.has(moveId)) {
       newCompleted.delete(moveId);
       // Also remove any moves that depend on this one
@@ -846,12 +857,25 @@ const ShuffleSkillTreeComponent: React.FC = () => {
       });
     } else {
       newCompleted.add(moveId);
+      // Automatically remove from goals when completed
+      if (newGoals.has(moveId)) {
+        newGoals.delete(moveId);
+        setGoals(newGoals);
+      }
     }
     setCompletedMoves(newCompleted);
 
+    // Optimistically update progress
+    if (onProgressUpdate) {
+      onProgressUpdate(newCompleted, newGoals);
+    }
+
     // Only save to Firebase if user is logged in
     if (currentUser) {
-      await saveProgress(newCompleted, completedSubComponents, goals);
+      await saveProgress(newCompleted, completedSubComponents, newGoals);
+    } else if (!currentUser && newGoals !== goals) {
+      // Save goals to localStorage if user is not logged in and goals changed
+      localStorage.setItem('shuffleGoals', JSON.stringify(Array.from(newGoals)));
     }
   };
 
@@ -1708,10 +1732,10 @@ const ShuffleSkillTreeComponent: React.FC = () => {
   );
 };
 
-const ShuffleSkillTree: React.FC = () => {
+const ShuffleSkillTree: React.FC<ShuffleSkillTreeProps> = ({ onProgressUpdate }) => {
   return (
     <ReactFlowProvider>
-      <ShuffleSkillTreeComponent />
+      <ShuffleSkillTreeComponent onProgressUpdate={onProgressUpdate} />
     </ReactFlowProvider>
   );
 };

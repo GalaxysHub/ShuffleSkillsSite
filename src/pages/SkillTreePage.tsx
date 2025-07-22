@@ -17,6 +17,81 @@ const SkillTreePage: React.FC = () => {
     advanced: { completed: 0, total: 2 },
   });
 
+  // Function to calculate progress from goals and completed moves
+  const calculateProgress = (userProgress: any, userGoals: any) => {
+    // Get all goals by difficulty
+    const beginnerGoals = Object.keys(userGoals).filter(moveId => {
+      return userGoals[moveId] && ["running-man", "t-step", "charleston", "reverse-running-man", "reverse-t-step", "polly-pocket", "half-step-variations", "shaper-t-step", "cowtail", "w-m-step", "v-step"].includes(moveId);
+    });
+    const intermediateGoals = Object.keys(userGoals).filter(moveId => {
+      return userGoals[moveId] && ["t-step-variations", "bree-spins", "frontside-kickspin", "sacco-kicks", "mikki-kicks", "front-kick", "front-hook-kick", "back-hook-kick", "moonwalk", "circle-glide", "side-glide"].includes(moveId);
+    });
+    const advancedGoals = Object.keys(userGoals).filter(moveId => {
+      return userGoals[moveId] && ["frontside-kickspin", "back-kick", "backside-kickspin"].includes(moveId);
+    });
+
+    // Get completed non-goals for each difficulty level
+    const beginnerCompletedNonGoals = Object.keys(userProgress).filter(moveId => 
+      userProgress[moveId] && 
+      ["running-man", "t-step", "charleston", "reverse-running-man", "reverse-t-step", "polly-pocket", "half-step-variations", "shaper-t-step", "cowtail", "w-m-step", "v-step"].includes(moveId) && 
+      !userGoals[moveId]
+    );
+
+    const intermediateCompletedNonGoals = Object.keys(userProgress).filter(moveId => 
+      userProgress[moveId] && 
+      ["t-step-variations", "bree-spins", "frontside-kickspin", "sacco-kicks", "mikki-kicks", "front-kick", "front-hook-kick", "back-hook-kick", "moonwalk", "circle-glide", "side-glide"].includes(moveId) && 
+      !userGoals[moveId]
+    );
+
+    const advancedCompletedNonGoals = Object.keys(userProgress).filter(moveId => 
+      userProgress[moveId] && 
+      ["frontside-kickspin", "back-kick", "backside-kickspin"].includes(moveId) && 
+      !userGoals[moveId]
+    );
+
+    // Count completed goals + completed non-goals
+    const beginnerCompleted = beginnerGoals.filter(moveId => userProgress[moveId]).length + beginnerCompletedNonGoals.length;
+    const intermediateCompleted = intermediateGoals.filter(moveId => userProgress[moveId]).length + intermediateCompletedNonGoals.length;
+    const advancedCompleted = advancedGoals.filter(moveId => userProgress[moveId]).length + advancedCompletedNonGoals.length;
+
+    // Total includes goals + any completed moves that weren't goals
+    const beginnerTotal = beginnerGoals.length + beginnerCompletedNonGoals.length;
+    const intermediateTotal = intermediateGoals.length + intermediateCompletedNonGoals.length;
+    const advancedTotal = advancedGoals.length + advancedCompletedNonGoals.length;
+
+    return {
+      beginner: {
+        completed: beginnerCompleted,
+        total: beginnerTotal,
+      },
+      intermediate: {
+        completed: intermediateCompleted,
+        total: intermediateTotal,
+      },
+      advanced: {
+        completed: advancedCompleted,
+        total: advancedTotal,
+      },
+    };
+  };
+
+  // Callback for optimistic updates from ShuffleSkillTree
+  const handleProgressUpdate = (completedMoves: Set<string>, goals: Set<string>) => {
+    const userProgress: any = {};
+    const userGoals: any = {};
+    
+    // Convert Sets to object format expected by calculateProgress
+    completedMoves.forEach(moveId => {
+      userProgress[moveId] = true;
+    });
+    goals.forEach(moveId => {
+      userGoals[moveId] = true;
+    });
+
+    const newProgress = calculateProgress(userProgress, userGoals);
+    setProgress(newProgress);
+  };
+
   useEffect(() => {
     const loadProgress = async () => {
       if (currentUser) {
@@ -24,60 +99,10 @@ const SkillTreePage: React.FC = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const userProgress = userData.progress || {};
+          const userGoals = userData.goals || {};
 
-          // Count completed moves by difficulty
-          const beginnerMoves = [
-            "running-man",
-            "t-step",
-            "charleston",
-            "reverse-running-man",
-            "reverse-t-step",
-            "polly-pocket",
-            "half-step-variations",
-            "shaper-t-step",
-            "cowtail",
-            "w-m-step",
-          ];
-          const intermediateMoves = [
-            "t-step-variations",
-            "bree-spins",
-            "frontside-kickspin",
-            "sacco-kicks",
-            "hammer-kick",
-            "180-backside-kickspin",
-            "moonwalk",
-            "circle-glide",
-            "side-glide",
-          ];
-          const advancedMoves: string[] = [
-            "spinning-backkick",
-            "360-frontside-kickspin",
-          ];
-
-          const beginnerCompleted = beginnerMoves.filter(
-            (move) => userProgress[move]
-          ).length;
-          const intermediateCompleted = intermediateMoves.filter(
-            (move) => userProgress[move]
-          ).length;
-          const advancedCompleted = advancedMoves.filter(
-            (move) => userProgress[move]
-          ).length;
-
-          setProgress({
-            beginner: {
-              completed: beginnerCompleted,
-              total: beginnerMoves.length,
-            },
-            intermediate: {
-              completed: intermediateCompleted,
-              total: intermediateMoves.length,
-            },
-            advanced: {
-              completed: advancedCompleted,
-              total: advancedMoves.length,
-            },
-          });
+          const newProgress = calculateProgress(userProgress, userGoals);
+          setProgress(newProgress);
         }
       }
     };
@@ -127,7 +152,7 @@ const SkillTreePage: React.FC = () => {
           <Paper sx={{ p: 3, mb: 3 }}>
             <Typography variant="h6" gutterBottom>
               <TrendingUp sx={{ mr: 1, verticalAlign: "middle" }} />
-              {currentUser ? "Your Learning Progress" : "Learning Progress"}
+              {currentUser ? "Your Goal Progress" : "Goal Progress"}
             </Typography>
             {currentUser ? (
               <Stack direction="row" spacing={3}>
@@ -135,30 +160,35 @@ const SkillTreePage: React.FC = () => {
                   <Typography variant="h4" color="success.main">
                     {progress.beginner.completed}/{progress.beginner.total}
                   </Typography>
-                  <Typography variant="caption">Beginner Moves</Typography>
+                  <Typography variant="caption">Beginner Goals</Typography>
                 </Box>
                 <Box>
                   <Typography variant="h4" color="warning.main">
                     {progress.intermediate.completed}/
                     {progress.intermediate.total}
                   </Typography>
-                  <Typography variant="caption">Intermediate Moves</Typography>
+                  <Typography variant="caption">Intermediate Goals</Typography>
                 </Box>
                 <Box>
                   <Typography variant="h4" color="error.main">
                     {progress.advanced.completed}/{progress.advanced.total}
                   </Typography>
-                  <Typography variant="caption">Advanced Moves</Typography>
+                  <Typography variant="caption">Advanced Goals</Typography>
                 </Box>
               </Stack>
             ) : (
               <Alert severity="info" sx={{ mt: 2 }}>
                 <Typography variant="body2">
-                  <strong>Login to track your progress!</strong> You can explore
-                  all moves below, but your progress won't be saved unless
-                  you're logged in.
+                  <strong>Login to set goals and track your progress!</strong> Set personal learning goals
+                  and see your completion progress. Completed moves that aren't goals also count as bonus progress.
                 </Typography>
               </Alert>
+            )}
+            {currentUser && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Progress shows completed goals plus any extra moves you've mastered. 
+                Set goals to personalize your learning journey!
+              </Typography>
             )}
           </Paper>
 
@@ -168,7 +198,7 @@ const SkillTreePage: React.FC = () => {
               <Star sx={{ mr: 1, verticalAlign: "middle" }} />
               Shuffle Move Progression
             </Typography>
-            <ShuffleSkillTree />
+            <ShuffleSkillTree onProgressUpdate={handleProgressUpdate} />
           </Paper>
 
           {/* Learning Tips */}
