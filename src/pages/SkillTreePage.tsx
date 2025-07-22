@@ -104,6 +104,22 @@ const SkillTreePage: React.FC = () => {
           const newProgress = calculateProgress(userProgress, userGoals);
           setProgress(newProgress);
         }
+      } else {
+        // Load progress from localStorage for non-logged-in users
+        const localGoals = localStorage.getItem('shuffleGoals');
+        const userGoals: any = {};
+        
+        if (localGoals) {
+          const goalsArray = JSON.parse(localGoals);
+          goalsArray.forEach((goalId: string) => {
+            userGoals[goalId] = true;
+          });
+        }
+
+        // No completed moves in localStorage, so empty progress object
+        const userProgress: any = {};
+        const newProgress = calculateProgress(userProgress, userGoals);
+        setProgress(newProgress);
       }
     };
 
@@ -152,39 +168,39 @@ const SkillTreePage: React.FC = () => {
           <Paper sx={{ p: 3, mb: 3 }}>
             <Typography variant="h6" gutterBottom>
               <TrendingUp sx={{ mr: 1, verticalAlign: "middle" }} />
-              {currentUser ? "Your Goal Progress" : "Goal Progress"}
+              Your Goal Progress
             </Typography>
-            {currentUser ? (
-              <Stack direction="row" spacing={3}>
-                <Box>
-                  <Typography variant="h4" color="success.main">
-                    {progress.beginner.completed}/{progress.beginner.total}
-                  </Typography>
-                  <Typography variant="caption">Beginner Goals</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="h4" color="warning.main">
-                    {progress.intermediate.completed}/
-                    {progress.intermediate.total}
-                  </Typography>
-                  <Typography variant="caption">Intermediate Goals</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="h4" color="error.main">
-                    {progress.advanced.completed}/{progress.advanced.total}
-                  </Typography>
-                  <Typography variant="caption">Advanced Goals</Typography>
-                </Box>
-              </Stack>
-            ) : (
+            
+            <Stack direction="row" spacing={3}>
+              <Box>
+                <Typography variant="h4" color="success.main">
+                  {progress.beginner.completed}/{progress.beginner.total}
+                </Typography>
+                <Typography variant="caption">Beginner Goals</Typography>
+              </Box>
+              <Box>
+                <Typography variant="h4" color="warning.main">
+                  {progress.intermediate.completed}/
+                  {progress.intermediate.total}
+                </Typography>
+                <Typography variant="caption">Intermediate Goals</Typography>
+              </Box>
+              <Box>
+                <Typography variant="h4" color="error.main">
+                  {progress.advanced.completed}/{progress.advanced.total}
+                </Typography>
+                <Typography variant="caption">Advanced Goals</Typography>
+              </Box>
+            </Stack>
+
+            {!currentUser ? (
               <Alert severity="info" sx={{ mt: 2 }}>
                 <Typography variant="body2">
-                  <strong>Login to set goals and track your progress!</strong> Set personal learning goals
-                  and see your completion progress. Completed moves that aren't goals also count as bonus progress.
+                  <strong>Login to track completed moves!</strong> Set personal learning goals below.
+                  Your goals are saved locally, but login to sync progress across devices and track completions.
                 </Typography>
               </Alert>
-            )}
-            {currentUser && (
+            ) : (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
                 Progress shows completed goals plus any extra moves you've mastered. 
                 Set goals to personalize your learning journey!
