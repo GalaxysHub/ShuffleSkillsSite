@@ -69,6 +69,12 @@ interface ShuffleMove {
 
 
 
+// Firebase Storage base URL for GIF files
+const getGifUrl = (moveId: string) => `https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2F${moveId}.gif?alt=media`;
+
+// Default GIF for when move GIFs are not found
+const DEFAULT_GIF_URL = "https://media.tenor.com/BMya17p9R6kAAAAM/merry.gif";
+
 const shuffleMoves: ShuffleMove[] = [
   // Foundation Moves (Level 1)
   {
@@ -90,7 +96,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Maintain consistent rhythm",
       "Fundamental building block for shuffle dance"
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Frunning-man.gif?alt=media&token=",
+    videoId: getGifUrl("running-man"),
     position: { x: 550, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -118,7 +124,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Foundation for the gliding illusion across floor",
       "Essential building block for advanced combinations"
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ft-step.gif?alt=media",
+    videoId: getGifUrl("t-step"),
     position: { x: 1050, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -138,7 +144,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Twist feet and maintain syncopated rhythm",
       "Foundation for modern swing dance elements"
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fcharleston.gif?alt=media",
+    videoId: getGifUrl("charleston"),
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
@@ -387,6 +393,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Generate rotation through upper body torque",
       "Coordinate kick timing with spin completion"
     ],
+    videoId: getGifUrl("frontside-kickspin"),
     position: { x: 1420, y: 600 },
     completed: false,
     styles: ["melbourne"],
@@ -408,7 +415,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Focus on smooth extension and retraction",
       "Practice proper timing with shuffle rhythm"
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fback-kick.gif?alt=media",
+    videoId: getGifUrl("back-kick"),
     position: { x: 1580, y: 450 },
     completed: false,
     styles: ["melbourne"],
@@ -430,7 +437,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Requires greater balance control than frontside version",
       "Focus on controlled landing and stability after completion"
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fbackside-kickspin.gif?alt=media",
+    videoId: getGifUrl("backside-kickspin"),
     position: { x: 1580, y: 600 },
     completed: false,
     styles: ["melbourne"],
@@ -493,7 +500,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Rhythm control",
       "Leg positioning",
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fsacco-kicks.gif?alt=media",
+    videoId: getGifUrl("sacco-kicks"),
     position: { x: 1100, y: 380 },
     completed: false,
     styles: ["melbourne"],
@@ -532,7 +539,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Down beat occurs when foot is at the lower point",
       "Forward hooking leg motion with controlled extension",
     ],
-    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Ffront-hook-kick.gif?alt=media",
+    videoId: getGifUrl("front-hook-kick"),
     position: { x: 1420, y: 290 },
     completed: false,
     styles: ["melbourne", "shapes"],
@@ -1503,8 +1510,11 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
                   }}
                 >
                   <img 
-                    src={selectedMove.videoId || "https://media.tenor.com/BMya17p9R6kAAAAM/merry.gif"}
+                    src={selectedMove.videoId || DEFAULT_GIF_URL}
                     alt={`${selectedMove.name} demo`}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = DEFAULT_GIF_URL;
+                    }}
                     style={{
                       width: '100%',
                       height: '100%',

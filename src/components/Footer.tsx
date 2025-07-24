@@ -144,6 +144,20 @@ const Footer: React.FC = () => {
                 >
                   • Contact Us
                 </Link>
+                <Link
+                  component={RouterLink}
+                  to="/contributions"
+                  variant="body2"
+                  color="primary"
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { 
+                      textDecoration: 'underline' 
+                    }
+                  }}
+                >
+                  • Contributors
+                </Link>
               </Box>
             </Box>
 
