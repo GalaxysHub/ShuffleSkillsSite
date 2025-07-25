@@ -1,50 +1,68 @@
-import { track } from '@vercel/analytics';
+// Google Analytics 4 utilities
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
 
-// Simple analytics tracking using Vercel Analytics
-export const trackPageView = (url: string, title: string) => {
-  track('page_view', {
-    url,
-    title
-  });
+// GA4 Measurement ID
+export const GA_MEASUREMENT_ID = 'G-EEDVNZ1Z8H';
+
+// Track page views
+export const trackPageView = (url: string, title?: string) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('config', GA_MEASUREMENT_ID, {
+      page_location: url,
+      page_title: title,
+    });
+  }
 };
 
-// Shuffle-specific event tracking
+// Track custom events
+export const trackEvent = (
+  action: string,
+  category: string,
+  label?: string,
+  value?: number
+) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', action, {
+      event_category: category,
+      event_label: label,
+      value: value,
+    });
+  }
+};
+
+// Track shuffle-specific events
 export const trackShuffleEvent = {
+  // Track when a move is completed
   completeMove: (moveName: string, difficulty: string) => {
-    track('complete_move', {
-      move_name: moveName,
-      difficulty
-    });
+    trackEvent('complete_move', 'shuffle_progress', `${moveName} (${difficulty})`);
   },
-
+  
+  // Track when a goal is set
   setGoal: (moveName: string, difficulty: string) => {
-    track('set_goal', {
-      move_name: moveName,
-      difficulty
-    });
+    trackEvent('set_goal', 'shuffle_goals', `${moveName} (${difficulty})`);
   },
-
+  
+  // Track when a move modal is opened
   viewMove: (moveName: string, difficulty: string) => {
-    track('view_move', {
-      move_name: moveName,
-      difficulty
-    });
+    trackEvent('view_move', 'shuffle_engagement', `${moveName} (${difficulty})`);
   },
-
+  
+  // Track authentication events
   login: (method: string) => {
-    track('login', {
-      method
-    });
+    trackEvent('login', 'authentication', method);
   },
-
-  uploadMove: () => {
-    track('upload_move');
+  
+  // Track move uploads
+  uploadMove: (moveName: string, difficulty: string) => {
+    trackEvent('upload_move', 'content_creation', `${moveName} (${difficulty})`);
   },
-
+  
+  // Track filter usage
   filterMoves: (filterType: string, filterValue: string) => {
-    track('filter_moves', {
-      filter_type: filterType,
-      filter_value: filterValue
-    });
+    trackEvent('filter_moves', 'navigation', `${filterType}: ${filterValue}`);
   }
 };
