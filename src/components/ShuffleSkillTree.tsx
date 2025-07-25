@@ -892,7 +892,9 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
 
   const toggleComplete = async (moveId: string) => {
     const move = shuffleMoves.find((m) => m.id === moveId);
-    if (move?.subComponents && !canCompleteMove(move)) {
+    if (!move) return; // Exit if move not found
+    
+    if (move.subComponents && !canCompleteMove(move)) {
       return; // Cannot complete if sub-components are not all done
     }
 

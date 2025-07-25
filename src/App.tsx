@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from './contexts/AuthContext';
 import AnalyticsWrapper from './components/AnalyticsWrapper';
 import SkillTreePage from './pages/SkillTreePage';
@@ -189,6 +190,7 @@ function App() {
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </AnalyticsWrapper>
+              <Analytics />
             </Box>
           </Router>
         </AuthProvider>
