@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
+import AnalyticsWrapper from './components/AnalyticsWrapper';
 import SkillTreePage from './pages/SkillTreePage';
 import HistoryPage from './pages/HistoryPage';
 import ContactPage from './pages/ContactPage';
@@ -176,16 +177,18 @@ function App() {
             ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)'
             : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%)',
         }}>
-              <Routes>
-                <Route path="/" element={<SkillTreePage />} />
-                <Route path="/history" element={<HistoryPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/upload-move" element={<UploadMovePage />} />
-                <Route path="/guidelines" element={<CommunityGuidelinesPage />} />
-                <Route path="/faq" element={<FAQPage />} />
-                <Route path="/contributions" element={<ContributionsPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+              <AnalyticsWrapper>
+                <Routes>
+                  <Route path="/" element={<SkillTreePage />} />
+                  <Route path="/history" element={<HistoryPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/upload-move" element={<UploadMovePage />} />
+                  <Route path="/guidelines" element={<CommunityGuidelinesPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/contributions" element={<ContributionsPage />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </AnalyticsWrapper>
             </Box>
           </Router>
         </AuthProvider>

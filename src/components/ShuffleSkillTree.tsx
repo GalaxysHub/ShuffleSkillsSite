@@ -27,6 +27,7 @@ import {
   Info,
   Close,
 } from "@mui/icons-material";
+import { trackShuffleEvent } from '../utils/analytics';
 import ReactFlow, {
   Controls,
   Background,
@@ -282,7 +283,7 @@ const shuffleMoves: ShuffleMove[] = [
   },
   {
     id: "w-m-step",
-    name: "W/M Step",
+    name: "W-Step",
     difficulty: "beginner",
     prerequisites: ["charleston"],
     unlocks: [],
@@ -707,7 +708,15 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentUser } = useAuth();
-  const [selectedMove, setSelectedMove] = useState<ShuffleMove | null>(null);
+  const [selectedMove, setSelectedMoveState] = useState<ShuffleMove | null>(null);
+  
+  // Wrapper function to track move views
+  const setSelectedMove = (move: ShuffleMove | null) => {
+    if (move) {
+      trackShuffleEvent.viewMove(move.name, move.difficulty);
+    }
+    setSelectedMoveState(move);
+  };
   const [completedMoves, setCompletedMoves] = useState<Set<string>>(new Set());
   const [goals, setGoals] = useState<Set<string>>(new Set());
   const [completedSubComponents, setCompletedSubComponents] = useState<{
@@ -854,11 +863,16 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
   };
 
   const toggleGoal = async (moveId: string) => {
+    const move = shuffleMoves.find((m) => m.id === moveId);
+    if (!move) return;
+    
     const newGoals = new Set(goals);
     if (newGoals.has(moveId)) {
       newGoals.delete(moveId);
     } else {
       newGoals.add(moveId);
+      // Track when a goal is set (not when removed)
+      trackShuffleEvent.setGoal(move.name, move.difficulty);
     }
     setGoals(newGoals);
 
@@ -895,6 +909,8 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
       });
     } else {
       newCompleted.add(moveId);
+      // Track move completion
+      trackShuffleEvent.completeMove(move.name, move.difficulty);
       // Automatically remove from goals when completed
       if (newGoals.has(moveId)) {
         newGoals.delete(moveId);
