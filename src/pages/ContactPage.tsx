@@ -127,7 +127,7 @@ const ContactPage: React.FC = () => {
 
         {/* Contact Form */}
         <Stack spacing={4}>
-          <Card elevation={3}>
+          <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
             <CardContent sx={{ p: 4 }}>
               <Typography
                 variant="h4"

@@ -14,6 +14,7 @@ import {
   Checkbox,
   FormControlLabel,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -58,6 +59,7 @@ interface ShuffleMove {
   position: { x: number; y: number };
   styles: ("melbourne" | "shapes")[];
   tags?: ("kick" | "spins" | "slides")[];
+  shufflers?: string[];
   subComponents?: {
     id: string;
     name: string;
@@ -101,6 +103,7 @@ const shuffleMoves: ShuffleMove[] = [
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
+    shufflers: ["Evelina", "Vanessa"],
   },
   {
     id: "t-step",
@@ -113,7 +116,6 @@ const shuffleMoves: ShuffleMove[] = [
       "advanced-t-step-variations",
       "shaper-t-step",
       "sacco-kicks",
-      "w-m-step",
       "v-step",
     ],
     description: "Core Melbourne shuffle move from the late 1980s featuring fast heel-toe footwork that creates the characteristic shuffle glide effect",
@@ -128,13 +130,14 @@ const shuffleMoves: ShuffleMove[] = [
     position: { x: 1050, y: 50 },
     completed: false,
     styles: ["melbourne", "shapes"],
+    shufflers: ["Sarah & Pae"],
   },
   {
     id: "charleston",
     name: "Charleston",
     difficulty: "beginner",
     prerequisites: [],
-    unlocks: ["cowtail"],
+    unlocks: ["cowtail", "charleston-variations", "w-m-step"],
     description:
       "Historic 1920s dance with African-American roots, adapted for shuffle with signature kick-and-step patterns and swinging arm movements",
     keyPoints: [
@@ -148,6 +151,7 @@ const shuffleMoves: ShuffleMove[] = [
     position: { x: 150, y: 50 },
     completed: false,
     styles: ["shapes"],
+    shufflers: ["Chica Bonita"],
   },
   {
     id: "reverse-running-man",
@@ -155,13 +159,12 @@ const shuffleMoves: ShuffleMove[] = [
     difficulty: "intermediate",
     prerequisites: ["running-man"],
     unlocks: ["bree-spins"],
-    description: "Backward variation where you slide the back leg forward instead of backward, creating the illusion of running backward in place",
+    description: "Backward variation where you slide the back leg forward instead of backward, creating the illusion of running backward in place. This move is rarely used in modern shuffle dance",
     keyPoints: [
       "Slide back leg forward instead of backward",
       "Lift right foot behind you, shift weight to left",
       "Keep movements quick and precise for fluidity",
-      "Maintain parallel feet throughout for clean look",
-      "Keep forearms close to torso for compact movement"
+      "Maintain parallel feet throughout for clean look"
     ],
     position: { x: 450, y: 180 },
     completed: false,
@@ -234,12 +237,13 @@ const shuffleMoves: ShuffleMove[] = [
       "Master the 1/2, 1/2, 1 rhythm pattern",
       "Keep feet sliding along the floor",
       "Practice directional changes smoothly",
-      "Focus on ankle action over large movements",
       "Maintain consistent timing throughout"
     ],
+    videoId: getGifUrl("half-step-variations"),
     position: { x: 650, y: 180 },
     completed: false,
     styles: ["melbourne"],
+    shufflers: ["Heidi Eddy"],
     subComponents: [
       {
         id: "forward-step",
@@ -272,7 +276,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Combine with heel-toe travel for sliding effect",
       "Focus on rhythmic leg crossing patterns"
     ],
-    position: { x: 100, y: 180 },
+    position: { x: 50, y: 180 },
     completed: false,
     styles: ["shapes"],
   },
@@ -280,7 +284,7 @@ const shuffleMoves: ShuffleMove[] = [
     id: "w-m-step",
     name: "W/M Step",
     difficulty: "beginner",
-    prerequisites: ["t-step"],
+    prerequisites: ["charleston"],
     unlocks: [],
     description: "Advanced geometric footwork creating W or M letter patterns on the floor through precise foot placement and movement sequences",
     keyPoints: [
@@ -290,9 +294,11 @@ const shuffleMoves: ShuffleMove[] = [
       "Master sequence timing before increasing speed",
       "Emphasize clean lines and sharp angles"
     ],
-    position: { x: 1150, y: 250 },
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fm-step-abby.gif?alt=media",
+    position: { x: 250, y: 180 },
     completed: false,
     styles: ["shapes"],
+    shufflers: ["Abby Castro"],
   },
   {
     id: "v-step",
@@ -308,7 +314,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Focus on clear V-shape formation throughout",
       "Practice both regular and inverted V-step variations"
     ],
-    position: { x: 1250, y: 250 },
+    position: { x: 1150, y: 250 },
     completed: false,
     styles: ["shapes"],
   },
@@ -347,33 +353,54 @@ const shuffleMoves: ShuffleMove[] = [
     ],
   },
   {
+    id: "charleston-variations",
+    name: "Charleston Variations",
+    difficulty: "intermediate",
+    prerequisites: ["charleston"],
+    unlocks: [],
+    description: "Advanced variations and combinations of the charleston move with complex kick patterns and directional changes",
+    keyPoints: [
+      "Complex kick combinations",
+      "Directional pattern changes", 
+      "Advanced rhythm variations",
+      "Smooth transitions between patterns"
+    ],
+    videoId: getGifUrl("charleston-variations"),
+    position: { x: 150, y: 380 },
+    completed: false,
+    styles: ["shapes"],
+  },
+  {
     id: "bree-spins",
-    name: "Bree Spins",
+    name: "Bre Spin",
     difficulty: "intermediate",
     prerequisites: ["running-man", "reverse-running-man"],
     unlocks: [],
     description:
-      "Running man combined with spinning elements, named after Bree, creating rotational movement while maintaining the running man rhythm",
+      "Running man combined with spinning elements, named after Brazilian shuffler Bre, using both feet to alternate between running man and reverse running man motion while creating rotational movement",
     keyPoints: [
       "Maintain running man rhythm",
       "Controlled spins",
+      "90 degree rotation per step",
       "Smooth transitions",
     ],
+    videoId: "https://firebasestorage.googleapis.com/v0/b/shuffle-tut.firebasestorage.app/o/gifs%2Fbre-spin.gif?alt=media&token=49e1c181-23b5-4237-87b9-a80c1aa1a2b2",
     position: { x: 450, y: 380 },
     completed: false,
     styles: ["melbourne"],
     tags: ["spins", "slides"],
+    shufflers: ["Thashi"],
     subComponents: [
       {
         id: "clockwise",
         name: "Clockwise",
-        description: "Bree spins performed in clockwise rotation",
+        description: "Bre spin performed in clockwise rotation",
         completed: false,
       },
       {
         id: "counter-clockwise",
         name: "Counter Clockwise",
-        description: "Bree spins performed in counter clockwise rotation",
+        description: "Bre spin performed in counter clockwise rotation",
         completed: false,
       },
     ],
@@ -399,6 +426,7 @@ const shuffleMoves: ShuffleMove[] = [
     styles: ["melbourne"],
     tags: ["kick", "spins"],
     category: "kick-spins-category",
+    shufflers: ["Dafayda"],
   },
   {
     id: "back-kick",
@@ -421,6 +449,7 @@ const shuffleMoves: ShuffleMove[] = [
     styles: ["melbourne"],
     tags: ["kick"],
     category: "kick-spins-category",
+    shufflers: ["Rocky", "Reese", "Sarah"],
   },
   {
     id: "backside-kickspin",
@@ -443,6 +472,7 @@ const shuffleMoves: ShuffleMove[] = [
     styles: ["melbourne"],
     tags: ["kick", "spins"],
     category: "kick-spins-category",
+    shufflers: ["Sacco", "Umbriel"],
   },
   {
     id: "mikki-kicks",
@@ -451,7 +481,7 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description:
-      "Dynamic kicking technique named after Mikki, featuring rapid alternating kicks with shuffle footwork integration",
+      "Dynamic kicking technique named after Australian shuffler Mikki, featuring rapid alternating kicks with shuffle footwork integration",
     keyPoints: [
       "Execute rapid alternating front kicks",
       "Maintain shuffle rhythm while kicking",
@@ -493,7 +523,7 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["t-step"],
     unlocks: [],
     description:
-      "Dynamic kicking movements named after Sacco that can be integrated into shuffle sequences, adding energy and visual appeal to routines",
+      "Dynamic kicking movements named after Australian shuffler Sacco that can be integrated into shuffle sequences, adding energy and visual appeal to routines",
     keyPoints: [
       "Sharp kicks",
       "T-step base",
@@ -505,6 +535,7 @@ const shuffleMoves: ShuffleMove[] = [
     completed: false,
     styles: ["melbourne"],
     tags: ["kick"],
+    shufflers: ["Sacco", "Umbriel", "Rocky"],
   },
   {
     id: "back-hook-kick",
@@ -532,7 +563,7 @@ const shuffleMoves: ShuffleMove[] = [
     prerequisites: ["running-man", "t-step"],
     unlocks: [],
     description:
-      "Dynamic forward kicking technique similar to kicking a soccer ball with a scooping motion",
+      "Dynamic forward kicking technique similar to kicking a soccer ball with a scooping motion, usually done with a 180 degree rotation",
     keyPoints: [
       "Kick motion similar to striking a soccer ball",
       "Foot is up on the upbeat of the music",
@@ -1494,34 +1525,79 @@ const ShuffleSkillTreeComponent: React.FC<ShuffleSkillTreeProps> = ({ onProgress
                   </Box>
                 </Box>
                 
-                {/* Right side - GIF placeholder */}
+                {/* Right side - GIF and Shufflers */}
                 <Box
                   sx={{
                     width: isMobile ? '100%' : 320,
-                    height: isMobile ? '100%' : 320,
-                    aspectRatio: '1 / 1',
-                    borderRadius: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: `1px solid ${theme.palette.divider}`,
                     flexShrink: 0,
-                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                   }}
                 >
-                  <img 
-                    src={selectedMove.videoId || DEFAULT_GIF_URL}
-                    alt={`${selectedMove.name} demo`}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = DEFAULT_GIF_URL;
-                    }}
-                    style={{
+                  {/* GIF container */}
+                  <Box
+                    sx={{
                       width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      borderRadius: '8px'
+                      height: isMobile ? '100%' : 320,
+                      aspectRatio: '1 / 1',
+                      borderRadius: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `1px solid ${theme.palette.divider}`,
+                      overflow: 'hidden',
                     }}
-                  />
+                  >
+                    <img 
+                      src={selectedMove.videoId || DEFAULT_GIF_URL}
+                      alt={`${selectedMove.name} demo`}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = DEFAULT_GIF_URL;
+                      }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        borderRadius: '8px'
+                      }}
+                    />
+                  </Box>
+                  
+                  {/* Shufflers hyperlink with tooltip */}
+                  {selectedMove.shufflers && selectedMove.shufflers.length > 0 && (
+                    <Box sx={{ textAlign: 'center', mt: 1 }}>
+                      <Tooltip 
+                        title={
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                              Featured Shufflers:
+                            </Typography>
+                            {selectedMove.shufflers.map((shuffler, index) => (
+                              <Typography key={index} variant="body2">
+                                • {shuffler}
+                              </Typography>
+                            ))}
+                          </Box>
+                        }
+                        arrow
+                        placement="bottom"
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: 'primary.main',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: 'primary.dark',
+                            },
+                          }}
+                        >
+                          Shufflers
+                        </Typography>
+                      </Tooltip>
+                    </Box>
+                  )}
                 </Box>
               </Box>
 

@@ -6,6 +6,7 @@ import {
   CardContent,
   Stack,
   useTheme,
+  Link,
 } from "@mui/material";
 import { 
   People, 
@@ -74,6 +75,42 @@ const ContributionsPage: React.FC = () => {
           </Typography>
         </Stack>
 
+        {/* Contributors Section */}
+        <Stack spacing={4} sx={{ mb: 6 }}>
+          {/* Joe Callingbull */}
+          <Card sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
+            <CardContent sx={{ p: 4 }}>
+              <Typography 
+                variant="h5" 
+                component="h3" 
+                gutterBottom
+                sx={{ fontWeight: 'bold', color: 'primary.main' }}
+              >
+                Joe Callingbull
+              </Typography>
+              <Typography variant="body1" paragraph>
+                Special thanks to Joe Callingbull for being willing to share his collection of videos.
+              </Typography>
+              <Typography variant="body1">
+                Check out his YouTube channel: {' '}
+                <Link 
+                  href="https://www.youtube.com/@Shootnstar60"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ 
+                    color: 'primary.main',
+                    textDecoration: 'underline',
+                    '&:hover': {
+                      color: 'primary.dark',
+                    }
+                  }}
+                >
+                  @Shootnstar60
+                </Link>
+              </Typography>
+            </CardContent>
+          </Card>
+        </Stack>
 
         {/* Call to Action */}
         <Card sx={{ mt: 6, textAlign: 'center' }}>

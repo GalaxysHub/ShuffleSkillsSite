@@ -232,7 +232,7 @@ const SkillTreePage: React.FC = () => {
               <li>
                 <Typography variant="body2" sx={{ mb: 1 }}>
                   <strong>Practice prerequisites:</strong> Each move builds on
-                  previous skills - don't skip steps
+                  previous skills - don't skip steps. Note that not all prerequisites are hard requirements before moving to other moves
                 </Typography>
               </li>
               <li>

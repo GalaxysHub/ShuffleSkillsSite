@@ -111,7 +111,7 @@ const FAQPage: React.FC = () => {
           </Typography>
         </Box>
 
-        <Card elevation={3}>
+        <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
           <CardContent sx={{ p: 4 }}>
             <Typography variant="h4" gutterBottom sx={{ fontFamily: '"Orbitron", sans-serif' }}>
               Common Questions

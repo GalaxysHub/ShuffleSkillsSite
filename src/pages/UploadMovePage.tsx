@@ -240,7 +240,7 @@ export default function UploadMovePage() {
           </Alert>
         )}
 
-        <Card elevation={3}>
+        <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
           <CardContent sx={{ p: 4 }}>
             <Box component="form" onSubmit={handleSubmit}>
               <Stack spacing={3}>
@@ -475,7 +475,7 @@ export default function UploadMovePage() {
           </CardContent>
         </Card>
 
-        <Card elevation={1} sx={{ mt: 3 }}>
+        <Card elevation={1} sx={{ mt: 3, '&:hover': { transform: 'none', boxShadow: 1 } }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>Submission Guidelines</Typography>
             <Box component="ul" sx={{ pl: 3 }}>

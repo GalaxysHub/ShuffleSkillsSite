@@ -71,7 +71,7 @@ const HistoryPage: React.FC = () => {
         {/* Dance Move Histories */}
         <Stack spacing={4}>
           {/* T-Step */}
-          <Card elevation={3}>
+          <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <Typography
@@ -166,7 +166,7 @@ const HistoryPage: React.FC = () => {
           </Card>
 
           {/* Running Man */}
-          <Card elevation={3}>
+          <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <Typography
@@ -261,7 +261,7 @@ const HistoryPage: React.FC = () => {
           </Card>
 
           {/* Charleston */}
-          <Card elevation={3}>
+          <Card elevation={3} sx={{ '&:hover': { transform: 'none', boxShadow: 3 } }}>
             <CardContent sx={{ p: 4 }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <Typography
