@@ -422,7 +422,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Coordinate kick timing with spin completion"
     ],
     videoId: getGifUrl("frontside-kickspin"),
-    position: { x: 1420, y: 600 },
+    position: { x: 1520, y: 600 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick", "spins"],
@@ -445,7 +445,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Practice proper timing with shuffle rhythm"
     ],
     videoId: getGifUrl("back-kick"),
-    position: { x: 1580, y: 450 },
+    position: { x: 1780, y: 450 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick"],
@@ -468,7 +468,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Focus on controlled landing and stability after completion"
     ],
     videoId: getGifUrl("backside-kickspin"),
-    position: { x: 1580, y: 600 },
+    position: { x: 1780, y: 600 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick", "spins"],
@@ -511,7 +511,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Focus on smooth extension and retraction",
       "Practice proper timing with shuffle rhythm"
     ],
-    position: { x: 1420, y: 450 },
+    position: { x: 1520, y: 450 },
     completed: false,
     styles: ["melbourne"],
     tags: ["kick"],
@@ -543,7 +543,7 @@ const shuffleMoves: ShuffleMove[] = [
     name: "Back Hook Kick",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
-    unlocks: [],
+    unlocks: ["ornamented-back-hook-kick"],
     description:
       "Dynamic backward kicking technique featuring hooking leg motions that combine back kicks with shuffle foundations",
     keyPoints: [
@@ -552,7 +552,28 @@ const shuffleMoves: ShuffleMove[] = [
       "Balance and stability focus",
       "Rhythmic coordination with footwork",
     ],
-    position: { x: 1580, y: 290 },
+    position: { x: 1780, y: 290 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["kick"],
+  },
+  {
+    id: "ornamented-back-hook-kick",
+    name: "Ornamented Back Hook Kick",
+    difficulty: "intermediate",
+    prerequisites: ["back-hook-kick"],
+    unlocks: [],
+    description:
+      "Decorative variation of the back hook kick featuring embellished movements and stylistic flourishes that add visual flair to the basic backward kicking technique",
+    keyPoints: [
+      "Add stylistic flourishes to basic back hook kick",
+      "Incorporate decorative arm movements and body positioning",
+      "Maintain core back hook kick technique while adding ornamentation",
+      "Focus on artistic expression and visual appeal",
+      "Practice smooth integration of backward kick embellishments"
+    ],
+    videoId: getGifUrl("ornamented-back-hook-kick"),
+    position: { x: 1880, y: 390 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["kick"],
@@ -562,7 +583,7 @@ const shuffleMoves: ShuffleMove[] = [
     name: "Front Hook Kick",
     difficulty: "intermediate",
     prerequisites: ["running-man", "t-step"],
-    unlocks: [],
+    unlocks: ["360-front-hook-kick", "ornamented-front-hook-kick"],
     description:
       "Dynamic forward kicking technique similar to kicking a soccer ball with a scooping motion, usually done with a 180 degree rotation",
     keyPoints: [
@@ -572,7 +593,49 @@ const shuffleMoves: ShuffleMove[] = [
       "Forward hooking leg motion with controlled extension",
     ],
     videoId: getGifUrl("front-hook-kick"),
-    position: { x: 1420, y: 290 },
+    position: { x: 1520, y: 290 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["kick"],
+  },
+  {
+    id: "360-front-hook-kick",
+    name: "360 Front Hook Kick",
+    difficulty: "advanced",
+    prerequisites: ["front-hook-kick"],
+    unlocks: [],
+    description:
+      "Advanced variation of the front hook kick performed with a full 360-degree rotation, combining the hooking motion with a complete spin",
+    keyPoints: [
+      "Complete 360-degree rotation while executing hook kick",
+      "Maintain balance throughout the full rotation",
+      "Timing is crucial - kick motion integrated with spin",
+      "Land facing original direction after full rotation",
+    ],
+    videoId: getGifUrl("360-front-hook-kick"),
+    position: { x: 1420, y: 390 },
+    completed: false,
+    styles: ["melbourne", "shapes"],
+    tags: ["kick", "spins"],
+    shufflers: ["Bre"],
+  },
+  {
+    id: "ornamented-front-hook-kick",
+    name: "Ornamented Front Hook Kick",
+    difficulty: "intermediate",
+    prerequisites: ["front-hook-kick"],
+    unlocks: [],
+    description:
+      "Decorative variation of the front hook kick featuring embellished movements and stylistic flourishes that add visual flair to the basic technique",
+    keyPoints: [
+      "Add stylistic flourishes to basic front hook kick",
+      "Incorporate decorative arm movements and body positioning",
+      "Maintain core hook kick technique while adding ornamentation",
+      "Focus on artistic expression and visual appeal",
+      "Practice smooth integration of embellishments"
+    ],
+    videoId: getGifUrl("ornamented-front-hook-kick"),
+    position: { x: 1620, y: 390 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["kick"],
@@ -592,7 +655,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Practice on smooth surfaces for optimal gliding",
       "Coordinate natural arm movements to enhance illusion"
     ],
-    position: { x: 1760, y: 380 },
+    position: { x: 2160, y: 380 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
@@ -613,7 +676,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Practice both clockwise and counter-clockwise directions",
       "Coordinate circular movement with upper body flow"
     ],
-    position: { x: 1760, y: 500 },
+    position: { x: 2160, y: 500 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
@@ -648,7 +711,7 @@ const shuffleMoves: ShuffleMove[] = [
       "Focus on smooth, controlled lateral motion",
       "Master basic lateral weight transfers before adding gliding"
     ],
-    position: { x: 1860, y: 440 },
+    position: { x: 2260, y: 440 },
     completed: false,
     styles: ["melbourne", "shapes"],
     tags: ["slides"],
