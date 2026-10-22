@@ -68,7 +68,7 @@ src/
 
 ## Firebase Configuration
 
-The app uses Firebase for authentication and data storage. It's configured to work with the shuffle-tut Firebase project.
+The app uses Firebase for authentication and data storage. The client config lives in `src/config/firebase.ts`; point it at your own Firebase project. Firebase web API keys are public identifiers rather than secrets, but restrict them to your domains in the Google Cloud console.
 
 ## Building for Production
 
@@ -78,4 +78,6 @@ npm run build
 
 ## License
 
-This project is part of the Shuffle Tutorial Site ecosystem.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
+It is a companion to [Shuffle-Tutorial-Web-App](https://github.com/GalaxysHub/Shuffle-Tutorial-Web-App).
